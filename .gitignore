@@ -1,0 +1,41 @@
+# Build results
+bin/
+obj/
+
+# Content Pipeline intermediate files
+*.xnb
+*.cache
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+
+# Debugging & runtime files
+*.dll
+*.exe
+*.pdb
+
+# NuGet packages
+*.nupkg
+packages/
+project.lock.json
+project.assets.json
+
+# Visual Studio Code settings
+.vscode/
+
+# MonoGame Pipeline Tool cache
+Content/bin/
+Content/obj/
+
+# Logs
+*.log
+
+# Personnal files
+Docs/~$*
+*desktop.ini*
