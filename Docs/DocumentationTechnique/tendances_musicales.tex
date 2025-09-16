@@ -1,0 +1,288 @@
+\documentclass[french]{article}
+\usepackage{amsbsy}
+\usepackage{amsmath, amssymb}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage[french]{babel}
+\usepackage{bm}
+\usepackage{calrsfs}
+\usepackage{caption}
+\usepackage{chngcntr}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage[]{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{lastpage}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{lmodern}
+\usepackage[final]{pdfpages}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage[a4paper, top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% En-tête de la page
+\lhead{\ifthenelse{\value{page}=0}{}{Répondre à une problématique avec des données}}
+\chead{\ifthenelse{\value{page}=0}{}{}}
+\rhead{\ifthenelse{\value{page}=0}{}{M110}}
+
+% Bas de page
+\lfoot{\ifthenelse{\value{page}=0}{}{Étienne Caulier}}
+\cfoot{\ifthenelse{\value{page}=1}{\thepage \hspace{1pt} / \pageref{LastPage}}{\ifthenelse{\value{page}=0}{}{\thepage \hspace{1pt} / \pageref{LastPage}}}}
+\rfoot{\ifthenelse{\value{page}=0}{}{}}
+
+% Commandes personnalisées
+\pagestyle{fancy}
+\newcommand{\newLine}{\vspace{0.2cm}}
+\newcommand{\interruption}[1]{\vspace{0.1cm} \begin{center} \textbf{{-- #1 --}} \end{center} \vspace{0.1cm}}
+
+% Redéfinition de \maketitle pour centrer le titre
+\pretitle{\begin{center}\vspace*{\fill}\Huge\bfseries}
+	\posttitle{\par\end{center}\vskip 0.5em}
+	\preauthor{\begin{center}\large}
+	\postauthor{\par\end{center}\vskip 0.5em}
+	\predate{\begin{center}\large}
+	\postdate{\par\end{center}\vspace*{\fill}}
+
+% Début du document
+\begin{document}
+
+\title{\Huge{\textbf{Répondre à une problématique avec des données}}}
+\author{\Large{\textbf{Étienne Caulier}}}
+\maketitle
+
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+\section{Contexte}
+Ce projet est réalisé dans le cadre du module M110, qui porte sur l'analyse et la représentation de données. L'idée est d'apprendre à travailler avec des données, de les représenter et de les interpréter à l'aide de graphiques. \newLine
+
+Pour ce travail individuel, on doit choisir un sujet qui nous intéresse, formuler une problématique, et y répondre en s'appuyant sur un modèle de données. Trois sous-questions viennent guider la réflexion pour structurer l'analyse.
+
+\section{Introduction}
+Le lundi 17 mars, on a dû chercher un dataset sur lequel travailler. Étant pianiste au Conservatoire de Musique de Genève (CMG), j'ai naturellement choisi un thème en lien avec la musique. \newLine
+
+J'ai trouvé mon jeu de données sur \href{https://www.kaggle.com/datasets}{kaggle.com}, plus précisément sur les \href{https://www.kaggle.com/datasets/paradisejoy/top-hits-spotify-from-20002019}{Top Hits Spotify de 2000 à 2019}. Ce dataset qui a été créé par \textit{Mark Koverha} regroupe les morceaux les plus populaires sur Spotify sur une période de près de vingt ans, avec de nombreuses informations comme la popularité, l'énergie, la danseabilité ou encore le tempo. \newLine
+
+Concernant les modifications à apporter, je n'ai pas eu besoin de modifier de données mise à part le type de données que \textit{Power BI} avait mal reconnu.
+
+\subsection{Problématique}
+\interruption{Comment les tendances musicales ont-elles évolué au fil du temps ?}
+
+Cette question sera analysée à travers trois sous-questions, en m'appuyant sur les données disponibles. \newLine
+
+\begin{itemize}
+	\item \textbf{Quels sont les genres musicaux les plus populaires chaque année ?}
+\end{itemize}
+
+Ce graphique permettra de voir l'évolution des genres dominants de 2000 à 2019. \newLine
+
+\begin{itemize}
+	\item \textbf{Comment la durée moyenne des morceaux a-t-elle évolué au fil du temps ?}
+\end{itemize}
+
+Un simple graphique montrant la durée moyenne par année suffira à identifier une tendance. \newLine
+
+\begin{itemize}
+	\item \textbf{Comment le tempo moyen des morceaux a-t-il changé entre 2000 et 2019 ?}
+\end{itemize}
+
+Cela permettra de visualiser si les chansons sont devenues plus rapides ou plus lentes avec le temps.
+
+\subsection{Présentation des données}
+Dans mon dataset, on trouve plusieurs colonnes. Les voici :
+\begin{itemize}
+	\item \textbf{artist} : qui correspond à l'artiste de la chanson (de type texte)
+
+	\item \textbf{song} : qui correspond au nom de la chanson (de type texte)
+
+	\item \textbf{duration\_ms} : qui correspond à la durée de la chanson réprésentée en millisecondes (de type nombre entier)
+
+	\item \textbf{explicit} : qui dit si la chanson est explicit ou non (de type Boolean : \textit{true} or \textit{false})
+
+	      Personnellement, je n'ai pas vraiment fait attention à cette colonne. \newLine
+
+	\item \textbf{year} : qui correspond à l'année de sortie de la chanson (de type nombre entier)
+
+	\item \textbf{popularity} : qui correspond à la popularité de la chanson (de type nombre entier)
+
+	\item \textbf{danceability} : qui correspond à la dansabilité (ce qui rend la chanson dansable) de la chanson (de type nombre à virgule)
+
+	\item \textbf{energy} : qui correspond à une mesure perceptive de l'intensité et de l'activité de la chanson (de type nombre à virgule, \textbf{nombre qui va entre 0 et 1})
+
+	Personnellement, je n'ai pas vraiment fait attention à cette colonne. \newLine
+
+	\item \textbf{key} : qui correspond à la clé dans laquelle se trouve la piste (de type nombre entier)
+
+	Personnellement, je n'ai pas vraiment fait attention à cette colonne. \newLine
+
+	\item \textbf{loudness} : qui correspond à la puissance subjective du son de la chanson (de type nombre à virgule négatif)
+	\item \textbf{mode} : je n'ai pas compris cette colonne. Je ne l'ai donc as utilisé.
+	\item \textbf{speechiness} : qui correspond à une mesure perceptive si la chanson contient des paroles (de type nombre à virgule)
+	\item \textbf{acousticness} : je n'ai pas compris cette colonne. Je ne l'ai donc as utilisé.
+	\item \textbf{instrumentalness} : je n'ai pas compris cette colonne. Je ne l'ai donc as utilisé.
+	\item \textbf{liveness} : qui correspond à une mesure perceptive si la chanson est vivante (de type nombre à virgule)
+	\item \textbf{valence} : je n'ai pas compris cette colonne. Je ne l'ai donc as utilisé.
+	\item \textbf{tempo} : qui correspond au nombre de battements par minutes (BPM) (de type nombre à virgule)
+
+	\item \textbf{genre} : qui correspond au genre de la chanson (de type texte)
+
+	Personnellement, je n'ai pas vraiment trouvé que c'était un bon format de données. Dans mes analyses, j'ai donc bien regarder les champs de genre pour une meilleure compréhension.
+\end{itemize}
+
+\clearpage
+
+\section{Développement}
+
+
+% ---------- SOUS QUESTION N1 ----------
+
+\subsection{Quels sont les genres musicaux les plus populaires chaque année ?}
+
+L'un des premiers aspects que j'ai souhaité analyser est l'évolution des genres musicaux au fil du temps. Pour cela, j'ai utilisé un graphique en \textit{colonnes empilées} dans Power BI. Ce visuel permet de représenter les genres les plus fréquents chaque année, sur la période allant de 2000 à 2019. \newLine
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{img/SQ1.jpg} % Sous Question 1
+	\caption{Évolution de la présence des genres musicaux dans les hits de 2000 à 2019.}
+	\label{fig:renforcement}
+\end{figure}
+
+Le graphique permet de visualiser clairement la répartition des genres dans les morceaux les plus populaires chaque année, et met en évidence l'évolution des tendances musicales au fil du temps. \newLine
+
+On remarque que le genre \textbf{pop} est resté particulièrement présent tout au long de la période. Sa présence constante montre qu'il s'agit d'un style qui plaît au grand public et qui parvient à s'adapter aux époques. \newLine
+
+À partir de \textbf{2010}, on observe une nette montée du genre \textbf{dance/electronic}. Cette progression peut s'expliquer par l'évolution des habitudes d'écoute (essor des plateformes de streaming, popularité des festivals électro, etc.), mais aussi par l'influence croissante des producteurs de musique électronique sur la scène mainstream. \newLine
+
+Il est également intéressant de noter que certains genres comme le \textbf{rock} ou le \textbf{metal} apparaissent de manière plus ponctuelle, avec des pics visibles notamment autour de \textbf{2001} et \textbf{2005}. Bien qu'ils soient moins représentés dans le reste de la période, leur présence montre qu'ils ont connu des moments de regain de popularité. \newLine
+
+Enfin, des genres comme le \textbf{hip hop} affichent une présence relativement constante sur l'ensemble de la période, sans forcément dominer, mais en restant toujours bien visibles dans les hits. Cela traduit une forme de stabilité et une influence persistante dans le paysage musical populaire. \newLine
+
+Cette visualisation offre ainsi un bon aperçu de l'évolution des styles dominants au fil des années. Elle permet non seulement d'identifier les genres les plus populaires à chaque époque, mais aussi de mieux comprendre comment certains styles émergent, se maintiennent ou s'effacent avec le temps. \newLine \newLine \newLine
+
+
+% ---------- SOUS QUESTION N2 ----------
+
+\clearpage
+\subsection{Comment la durée moyenne des morceaux a-t-elle évolué au fil du temps ?}
+
+Une autre dimension intéressante à analyser est la durée des morceaux dans les hits de Spotify. Pour cela, j'ai utilisé un graphique en \textit{courbes} dans Power BI, représentant la durée moyenne des morceaux pour chaque année entre 2000 et 2019. \newLine \newLine
+
+Dans mon dataset, le champ \textit{duration} est exprimé en millisecondes (ms). J'ai donc appliqué la conversion suivante pour obtenir la durée en minutes dans ce rapport :
+$$
+	D_m = \frac{D_{ms}}{1000 \times 60}
+$$
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{img/SQ2.jpg} % Sous Question 2
+	\caption{Évolution de la durée moyenne des morceaux dans les hits de 2000 à 2019.}
+	\label{fig:duree}
+\end{figure}
+
+Le graphique met en évidence la tendance générale de la longueur des morceaux au fil du temps. On observe que la durée moyenne en \textbf{1999} était d'environ \textbf{4,22} minutes (soit 4 minutes et 13 secondes), tandis qu'en \textbf{2019}, elle est passée à \textbf{3,27} minutes (3 minutes et 16 secondes). \newLine
+
+Cette évolution peut refléter plusieurs phénomènes. D'une part, l'évolution des habitudes d'écoute, notamment avec l'essor du streaming, pourrait pousser les artistes à produire des morceaux plus courts afin de maximiser les écoutes. D'autre part, cela peut aussi traduire une transformation du format des hits, devenant plus directs et plus “efficaces” dans leur construction. \newLine
+
+On peut également remarquer quelques variations notables. Par exemple, en \textbf{2002}, on observe un pic de durée moyenne atteignant environ \textbf{4,22} minutes (similaire à celle de 1999), tandis qu'en \textbf{2010}, la moyenne descend à \textbf{3,68} minutes. \newLine
+
+Dans l'ensemble, la courbe permet de constater que \textbf{la durée moyenne tend à diminuer légèrement au fil du temps}. \newLine \newLine \newLine
+
+% ---------- SOUS QUESTION N3 ----------
+
+\clearpage
+\subsection{Comment le tempo moyen des morceaux a-t-il changé entre 2000 et 2019 ?}
+
+Le tempo est un élément essentiel dans la perception d'un morceau : il influence directement l'énergie, le rythme et l'ambiance générale. Dans cette dernière analyse, j'ai souhaité observer comment le tempo moyen des morceaux populaires a évolué entre 2000 et 2019. \newLine
+
+Pour cela, j'ai utilisé un graphique en \textit{courbes} dans Power BI, représentant la valeur moyenne du \textit{tempo} (exprimée en BPM – battements par minute) pour chaque année. \newLine
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{img/SQ3.jpg} % Sous Question 3
+	\caption{Évolution du tempo moyen des morceaux dans les hits de 2000 à 2019.}
+	\label{fig:tempo}
+\end{figure}
+
+D'après le graphique, on remarque que le tempo moyen en \textbf{1999} était d'environ \textbf{122.71} BPM, tandis qu'en \textbf{2019}, il atteint \textbf{127,95} BPM. \newLine
+
+On observe une tendance globale à \textbf{en hausse}, avec quelques fluctuations d'une année à l'autre. Par exemple, en \textbf{de 2006 à 2008}, le tempo moyen atteint \textbf{126.25}, ce qui représente un \textbf{grand pic} par rapport aux autres années. \newLine
+
+Cette évolution du tempo peut s'expliquer par l'influence des genres musicaux dominants à différentes périodes. Par exemple, la montée du \textbf{dance ou electronic} peut contribuer à une augmentation du tempo moyen, tandis qu'une période marquée par des morceaux plus calmes (ex. ballades ou R\&B) peut faire baisser la moyenne. \newLine
+
+Dans l'ensemble, cette analyse permet de mieux comprendre l'évolution de l'intensité rythmique des morceaux populaires au fil des années, et comment elle peut être influencée par les tendances musicales du moment. \clearpage
+
+
+
+% ---------- MON TABLEAU DE BORD ----------
+\subsection{Mon tableau de bord}
+
+Après avoir analysé les différents aspects liés à l'évolution des tendances musicales, j'ai rassemblé les visualisations principales dans un tableau de bord interactif réalisé avec Power BI.
+
+\newLine
+
+Ce tableau de bord permet de centraliser les trois axes d'analyse abordés dans ce travail :
+\begin{itemize}
+    \item L'évolution des genres musicaux les plus représentés d'une année à l'autre ;
+    \item La variation de la durée moyenne des morceaux dans le temps ;
+    \item L'évolution du tempo moyen des morceaux, exprimé en BPM.
+\end{itemize}
+
+\newLine
+
+Chaque graphique est accompagné d'indicateurs synthétiques pour compléter l'analyse :
+\begin{itemize}
+    \item Le \textbf{tempo moyen global} des morceaux sur la période analysée, affiché ici comme étant de \textbf{120,12 BPM}
+    \item La \textbf{durée moyenne des morceaux}, calculée en millisecondes, qui s'élève à \textbf{228 750 ms} (soit environ 3 minutes et 49 secondes)
+    \item L'\textbf{année ayant le plus de morceaux} dans le dataset, qui est \textbf{2012}. Cela indique un pic dans la quantité de titres populaires recensés cette année-là.
+\end{itemize}
+
+\newLine
+
+Visuellement, les différents éléments sont répartis de façon à permettre une lecture rapide et intuitive des données. Le fond graphique ainsi que les couleurs utilisées visent à garder une cohérence esthétique, tout en mettant en valeur les informations clés. Ce tableau de bord offre ainsi une vue d'ensemble claire et efficace sur l'évolution des tendances musicales entre 1999 et 2019.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{img/dashboard.jpg}
+	\caption{Tableau de bord Power BI – évolution des tendances musicales de 1999 à 2019.}
+	\label{fig:dashboard}
+\end{figure}
+
+
+
+
+
+
+% ---------- CONCLUSION ----------
+
+\clearpage
+\section{Conclusion}
+
+À travers l'analyse de ce dataset musical issu de Spotify, j'ai pu explorer différentes facettes de l'évolution des morceaux populaires entre 2000 et 2019. L'objectif était de comprendre comment les tendances musicales ont changé au fil du temps, en m'appuyant sur des données concrètes et des représentations visuelles créées avec Power BI.
+
+\newLine
+
+L'étude des genres a montré que certains styles, comme la pop ou le hip hop, conservent une forte présence au fil des années, tandis que d'autres, comme le dance/electronic, connaissent une montée marquée à partir de 2010. Ces résultats démontrent l'évolution des goûts du public, mais aussi l'impact des technologies et des formats de diffusion sur la musique grand public.
+
+\newLine
+
+Du côté de la durée des morceaux, une tendance générale à la baisse a pu être observée. Cette évolution semble cohérente avec l'essor du streaming, qui favorise des morceaux plus courts, plus accessibles et plus rentables en termes d'écoutes. Même si la baisse reste modérée, elle reflète un changement progressif dans la manière de consommer la musique.
+
+\newLine
+
+Enfin, l'analyse du tempo révèle une légère augmentation de l'intensité rythmique moyenne des morceaux, possiblement influencée par la popularité croissante des genres plus dynamiques comme la dance ou l'électro. Cette hausse du tempo vient renforcer l'idée d'une musique plus directe, plus énergique, adaptée à des formats courts et percutants.
+
+\newLine
+
+Au final, ce projet m'a permis de manipuler un jeu de données concret, d'en extraire des tendances pertinentes et de mieux comprendre comment la musique évolue avec son époque. Il m'a également permis de mettre en pratique des outils d'analyse comme Power BI, tout en gardant un lien avec la musique.
+
+\end{document}
