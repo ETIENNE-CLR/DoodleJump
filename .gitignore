@@ -39,3 +39,11 @@ Content/obj/
 # Personnal files
 Docs/~$*
 *desktop.ini*
+
+# LaTeX files
+Docs/*/*.aux
+Docs/*/*.fdb_latexmk
+Docs/*/*.fls
+Docs/*/*.out
+Docs/*/*.synctex.gz
+Docs/*/*.toc
