@@ -12,36 +12,29 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DJGame.Models.Windows
 {
-    public class TitleScreen : MonogameWindow, IMonogameElement
+    public class GameScreen : MonogameWindow, IMonogameElement
     {
         // Champs de la classe...
-        private BtnPlay btnJouer;
+        private Player ply;
 
         // Constructeur de la classe...
-        public TitleScreen()
+        public GameScreen()
         {
-            this.btnJouer = new BtnPlay(new Action(() =>
-            {
-                SceneManager.activeScene = new GameScreen();
-            }), new Vector2(Game1.ScreenDimensions.Center.X+50, Game1.ScreenDimensions.Center.Y + 200), Vector2.Zero, 65);
         }
 
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
-            bgTexture = content.Load<Texture2D>("default");
-            btnJouer.LoadContent(content);
+            bgTexture = content.Load<Texture2D>("bg");
         }
 
         public override void Update(GameTime gameTime)
         {
-            btnJouer.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             DrawBackground(spriteBatch, gameTime);
-            btnJouer.Draw(spriteBatch, gameTime);
         }
     }
 }

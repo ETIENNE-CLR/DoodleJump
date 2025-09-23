@@ -28,7 +28,7 @@ namespace DJGame.Models.Agents
         public bool IsMoving { get => isMoving; }
 
         // Constructeur la classe...
-        protected AnimatedElement(Vector2 position, Vector2 velocity, float scale, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, scale, flipped, rotation, showHitbox)
+        protected AnimatedElement(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
             this.animations = new Dictionary<string, Animation>();
             isMoving = false;

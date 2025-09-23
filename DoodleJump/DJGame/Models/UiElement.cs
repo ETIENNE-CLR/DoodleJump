@@ -39,11 +39,11 @@ namespace DJGame.Models
 
 
         // Constructeur de la classe...
-        public UiElement(Vector2 position, Vector2 velocity, float scale, bool flipped = false, float rotation = 0, bool showHitbox = false)
+        public UiElement(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false)
         {
             this.position = position;
             this.velocity = velocity;
-            this.scale = scale;
+            SetSize(sizePourcent);
             this.flipped = flipped;
             this.rotation = rotation;
             this.showHitbox = showHitbox;
