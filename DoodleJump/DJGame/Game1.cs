@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DJGame.Controllers;
+using DJGame.Models.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -47,7 +48,7 @@ namespace DJGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            SceneManager.activeScene = null;
+            SceneManager.activeScene = new TitleScreen();
             SceneManager.activeScene.LoadContent(Content);
         }
 

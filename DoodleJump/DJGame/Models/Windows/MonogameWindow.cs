@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DJGame.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -10,21 +6,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DJGame.Models.Windows
 {
-    public class MonogameWindow : IMonogameElement
+    public abstract class MonogameWindow : IMonogameElement
     {
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        // Champs de la classe...
+        protected Texture2D bgTexture;
+
+        // Méthodes de la classe...
+        public abstract void LoadContent(ContentManager content);
+
+        public abstract void Draw(SpriteBatch spriteBatch, GameTime gameTime);
+
+        public void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            throw new NotImplementedException();
+            // Init
+            float scaleX = (float)Game1.ScreenDimensions.Width / bgTexture.Width;
+            float scaleY = (float)Game1.ScreenDimensions.Height / bgTexture.Height;
+
+            // Dessiner le background
+            spriteBatch.Draw(bgTexture, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(scaleX, scaleY), SpriteEffects.None, 0f);
         }
 
-        public void LoadContent(ContentManager content)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Update(GameTime gameTime);
     }
 }
