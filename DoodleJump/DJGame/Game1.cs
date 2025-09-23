@@ -10,12 +10,14 @@ namespace DJGame
     public class Game1 : Game
     {
         // Champs de la classe...
-        private static Rectangle screenDimensions;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private static Rectangle screenDimensions;
+        private static Texture2D whitePixel;
 
         // Propriétés de la classe...
         public static Rectangle ScreenDimensions { get => screenDimensions; }
+        public static Texture2D WhitePixel { get => whitePixel; }
 
         // Constructeur de la classe...
         public Game1()
@@ -48,6 +50,9 @@ namespace DJGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            whitePixel = new Texture2D(GraphicsDevice, 1, 1);
+            whitePixel.SetData(new[] { Color.White });
+
             SceneManager.activeScene = new TitleScreen();
             SceneManager.activeScene.LoadContent(Content);
         }
