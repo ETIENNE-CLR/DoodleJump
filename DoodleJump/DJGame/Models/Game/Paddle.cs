@@ -39,14 +39,14 @@ namespace DJGame.Models.Game
             switch (type)
             {
                 case PaddleType.SIMPLE:
-                    animations["idle"] = new Animation(Animation.GenerateAnimation(114, 29, 2, 3, 0, 0, 1), float.MinValue, 0, false);
+                    animations["idle"] = new Animation(Animation.GenerateAnimation(114, 29, 2, 3, 0, 0, 1), 0, 0, false);
                     break;
 
                 case PaddleType.BREAKABLE:
                     animations["idle"] = new Animation(new List<Rectangle>()
                     {
                         new Rectangle(5, 146, 115, 29)
-                    }, float.MinValue, 0, false);
+                    }, 0, 0, false);
 
                     animations["break"] = new Animation(new List<Rectangle>()
                     {

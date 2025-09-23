@@ -16,12 +16,14 @@ namespace DJGame.Models
         private int currentFrameIndex;
         private double timer;
         private float speedEntity;
+        private bool finished;
 
         // Propriétés de la classe
         public List<Rectangle> Frames { get => frames; }
         public float FrameDuration { get => frameDuration; }
         public Rectangle CurrentFrame => frames[currentFrameIndex];
         public float SpeedEntity { get => speedEntity; }
+        public bool Finished { get => finished; }
 
         /// <summary>
         /// Constructeur de la classe...
@@ -37,6 +39,7 @@ namespace DJGame.Models
             this.frameDuration = frameDuration;
             this.speedEntity = speedEntity;
             this.isLooping = isLooping;
+            finished = false;
         }
 
         // Méthodes de la classe...
@@ -70,15 +73,24 @@ namespace DJGame.Models
             }
         }
 
-        public void Update(double deltaTime)
+        public void Update(GameTime gametime)
         {
-            timer += deltaTime;
+            timer += gametime.ElapsedGameTime.TotalMilliseconds;
             if (timer >= frameDuration)
             {
                 timer -= frameDuration;
                 currentFrameIndex++;
                 if (currentFrameIndex >= frames.Count)
                     currentFrameIndex = isLooping ? 0 : frames.Count - 1;
+                if (!isLooping)
+                {
+                    finished = true;
+                    Restart();
+                }
+            }
+            else
+            {
+                finished = false;
             }
         }
 

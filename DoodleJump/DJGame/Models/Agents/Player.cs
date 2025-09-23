@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DJGame.Controllers;
 using DJGame.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace DJGame.Models.Agents
 {
@@ -21,20 +24,63 @@ namespace DJGame.Models.Agents
         public Player(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
             isJumping = false;
-            gravityEnv = 0.5f;
-            jumpForce = 10;
+            gravityEnv = 0.26f;
+            jumpForce = 11f;
             isFalling = false;
+            animationName = "idle";
         }
 
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
-            throw new NotImplementedException();
+            // Init
+            texture = content.Load<Texture2D>("Sprites/player");
+
+            // Animations
+            float intervalAnim = 350;
+            animations["idle"] = new Animation(new List<Rectangle>
+            {
+                new Rectangle(16, 15, 46, 45)
+            }, 0, 0, false);
+            animations["jump"] = new Animation(new List<Rectangle>
+            {
+                new Rectangle(78, 19, 46, 41)
+            }, intervalAnim, 0, false);
+
+            animations["shoot"] = new Animation(new List<Rectangle>
+            {
+                new Rectangle(15, 62, 30, 58)
+            }, 0, 0, false);
+            animations["shoot_jump"] = new Animation(new List<Rectangle>
+            {
+                new Rectangle(77, 64, 30, 58)
+            }, intervalAnim, 0, false);
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            // gravité
+            velocity.Y += gravityEnv;
+            const int maxFallSpeed = 9;
+            velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
+            position.Y += velocity.Y;
+            isFalling = velocity.Y > 0;
+
+            // Gestion des animations
+            CurrentAnimationObject.Update(gameTime);
+            if (animationName.Contains("jump") && CurrentAnimationObject.Finished)
+            {
+                animationName = animationName.Contains("shoot") ? "shoot" : "idle";
+                isJumping = false;
+            }
+        }
+
+        public void Jump()
+        {
+            animationName = "jump";
+            isJumping = true;
+            isFalling = false;
+            velocity.Y = -jumpForce;
         }
     }
 }
