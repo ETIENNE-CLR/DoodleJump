@@ -53,7 +53,7 @@ namespace DJGame
             whitePixel = new Texture2D(GraphicsDevice, 1, 1);
             whitePixel.SetData(new[] { Color.White });
 
-            SceneManager.activeScene = new TitleScreen();
+            SceneManager.activeScene = new GameScreen();
             SceneManager.activeScene.LoadContent(Content);
         }
 

@@ -6,28 +6,34 @@ using DJGame.Models.Agents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using SharpDX.DirectWrite;
 
-namespace DJGame.Models.Game.Paddle
+namespace DJGame.Models.Game
 {
     internal class Paddle : AnimatedElement, IMonogameElement
     {
         // Champs de la classe...
+        public const int NORME_SIZE = 50;
         private PaddleType type;
+        int baseSize;
 
         // Propriétés de la classe...
+        public PaddleType Type { get => type; }
 
         // Constructeur de la classe...
-        public Paddle(PaddleType type, Vector2 position, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, new Vector2(), sizePourcent, flipped, rotation, showHitbox)
+        public Paddle(PaddleType type, Vector2 position, int sizePourcent = NORME_SIZE, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, new Vector2(), sizePourcent, flipped, rotation, showHitbox)
         {
             this.type = type;
             animationName = "idle";
+            baseSize = sizePourcent;
         }
 
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
             // Chargement de la texture
-            texture = content.Load<Texture2D>("gameTiles");
+            texture = content.Load<Texture2D>("Sprites/default");
 
             // Animations
             switch (type)
@@ -56,7 +62,7 @@ namespace DJGame.Models.Game.Paddle
 
         public override void Update(GameTime gameTime)
         {
-            // throw new NotImplementedException();
+            // co
         }
     }
 }

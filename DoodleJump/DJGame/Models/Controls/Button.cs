@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct2D1.Effects;
 using SharpDX.Direct3D9;
 
 namespace DJGame.Models.Controls
@@ -31,8 +32,15 @@ namespace DJGame.Models.Controls
         // Méthodes de la classe...
         public override Rectangle Hitbox()
         {
-            return !clicked ? normalForm : clickedForm;
+            Rectangle src = !clicked ? normalForm : clickedForm;
+            return new Rectangle(
+                (int)Math.Round(Position.X),
+                (int)Math.Round(Position.Y),
+                (int)Math.Round(src.Width * Scale),
+                (int)Math.Round(src.Height * Scale)
+            );
         }
+
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
@@ -59,7 +67,7 @@ namespace DJGame.Models.Controls
         public override void Update(GameTime gameTime)
         {
             MouseState mouseState = Mouse.GetState();
-            Rectangle boutonRect = new Rectangle((int)position.X, (int)position.Y, texture.Width / 2, texture.Height);
+            Rectangle boutonRect = Hitbox();
 
             if (boutonRect.Contains(mouseState.Position))
             {

@@ -15,39 +15,46 @@ namespace DJGame.Models.Windows
     public class TitleScreen : MonogameWindow, IMonogameElement
     {
         // Champs de la classe...
-        private BtnPlay btnJouer;
+        private BtnPlay btnplay;
+        private BtnOptions btnOptions;
 
         // Constructeur de la classe...
         public TitleScreen()
         {
-            this.btnJouer = new BtnPlay(new Action(() =>
-            {
-                // tmp
-            }), new Vector2(Game1.ScreenDimensions.Center.X + 50, Game1.ScreenDimensions.Center.Y + 200), Vector2.Zero, 65, false, 0, true);
+            int btnX = (Game1.ScreenDimensions.Width * 1 / 4) - 50;
+            int btnSize = 85;
+
+            // Bouton principales
+            btnplay = new BtnPlay(new Action(() => { }), new Vector2(btnX, (Game1.ScreenDimensions.Height * 1 / 4) - 35), Vector2.Zero, btnSize, false, 0, false);
+            btnOptions = new BtnOptions(new Action(() => { }), new Vector2(btnX, (Game1.ScreenDimensions.Center.Y * 3 / 5) + 10), Vector2.Zero, btnSize, false, 0, false);
         }
 
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
-            bgTexture = content.Load<Texture2D>("default");
-            btnJouer.LoadContent(content);
-            btnJouer.actionToDo = () =>
+            bgTexture = content.Load<Texture2D>("Backgrounds/View/main_menu");
+            btnplay.LoadContent(content);
+            btnplay.actionToDo = () =>
             {
                 GameScreen gs = new GameScreen();
                 gs.LoadContent(content);
                 SceneManager.activeScene = gs;
             };
+
+            btnOptions.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
         {
-            btnJouer.Update(gameTime);
+            btnplay.Update(gameTime);
+            btnOptions.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             base.DrawBackground(spriteBatch, gameTime);
-            btnJouer.Draw(spriteBatch, gameTime);
+            btnplay.Draw(spriteBatch, gameTime);
+            btnOptions.Draw(spriteBatch, gameTime);
         }
     }
 }

@@ -9,7 +9,7 @@ using DJGame.Enum;
 using DJGame.Interfaces;
 using DJGame.Models.Agents;
 using DJGame.Models.Controls;
-using DJGame.Models.Game.Paddle;
+using DJGame.Models.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,19 +26,26 @@ namespace DJGame.Models.Windows
         public GameScreen()
         {
             paddles = new List<Paddle>();
-            paddles.Add(new Paddle(PaddleType.SIMPLE, new Vector2(10, 10), 100, false, 0, true));
+
+            int y = Game1.ScreenDimensions.Height * 3 / 4;
+            for (int i = 0; i < 5; i++)
+            {
+                paddles.Add(new Paddle(PaddleType.SIMPLE, new Vector2(100 * i + 10, y), Paddle.NORME_SIZE, false, 0, false));
+            }
         }
 
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
-            bgTexture = content.Load<Texture2D>("bg");
+            bgTexture = content.Load<Texture2D>("Backgrounds/Game/default");
             foreach (Paddle p in paddles)
                 p.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
         {
+            foreach (Paddle p in paddles)
+                p.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

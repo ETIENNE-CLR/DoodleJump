@@ -41,6 +41,7 @@ namespace DJGame.Models
             this.flipped = flipped;
             this.rotation = rotation;
             this.showHitbox = showHitbox;
+            // this.showHitbox = true;
         }
 
         // Méthodes de la classe...

@@ -36,7 +36,13 @@ namespace DJGame.Models.Agents
         // Méthodes de la classe...
         public override Rectangle Hitbox()
         {
-            return animations[animationName].CurrentFrame;
+            Rectangle src = animations[animationName].CurrentFrame;
+            return new Rectangle(
+                (int)Math.Round(Position.X),
+                (int)Math.Round(Position.Y),
+                (int)Math.Round(src.Width * Scale),
+                (int)Math.Round(src.Height * Scale)
+            );
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
