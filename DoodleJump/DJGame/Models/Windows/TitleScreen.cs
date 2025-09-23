@@ -22,8 +22,8 @@ namespace DJGame.Models.Windows
         {
             this.btnJouer = new BtnPlay(new Action(() =>
             {
-                SceneManager.activeScene = new GameScreen();
-            }), new Vector2(Game1.ScreenDimensions.Center.X+50, Game1.ScreenDimensions.Center.Y + 200), Vector2.Zero, 65);
+                // tmp
+            }), new Vector2(Game1.ScreenDimensions.Center.X + 50, Game1.ScreenDimensions.Center.Y + 200), Vector2.Zero, 65, false, 0, true);
         }
 
         // Méthodes de la classe...
@@ -31,6 +31,12 @@ namespace DJGame.Models.Windows
         {
             bgTexture = content.Load<Texture2D>("default");
             btnJouer.LoadContent(content);
+            btnJouer.actionToDo = () =>
+            {
+                GameScreen gs = new GameScreen();
+                gs.LoadContent(content);
+                SceneManager.activeScene = gs;
+            };
         }
 
         public override void Update(GameTime gameTime)
@@ -40,7 +46,7 @@ namespace DJGame.Models.Windows
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            DrawBackground(spriteBatch, gameTime);
+            base.DrawBackground(spriteBatch, gameTime);
             btnJouer.Draw(spriteBatch, gameTime);
         }
     }

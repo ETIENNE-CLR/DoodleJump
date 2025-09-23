@@ -23,7 +23,14 @@ namespace DJGame.Models
         public Rectangle CurrentFrame => frames[currentFrameIndex];
         public float SpeedEntity { get => speedEntity; }
 
-        // Constructeur de la classe...
+        /// <summary>
+        /// Constructeur de la classe...
+        /// </summary>
+        /// <param name="frames">Le recueil de toutes les Rectangles (animations) de l'animation</param>
+        /// <param name="frameDuration">Temps que prend le moteur de jeu pour changer d'animation</param>
+        /// <param name="speedEntity">Le temps que met l'animation pour son mouvement (si on souhaite une syncronisation en fonction des mouvement de l'élement)</param>
+        /// <param name="isLooping">Si l'animation doit être jouée en boucle</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public Animation(List<Rectangle> frames, float frameDuration, float speedEntity, bool isLooping = true)
         {
             this.frames = frames ?? throw new ArgumentNullException(nameof(frames));

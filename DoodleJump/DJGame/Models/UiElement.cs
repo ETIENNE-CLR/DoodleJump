@@ -26,12 +26,6 @@ namespace DJGame.Models
         public Vector2 Position { get => position; }
         protected Texture2D Texture { get => texture; }
         protected Vector2 Velocity { get => velocity; }
-        public Rectangle Hitbox => new Rectangle(
-                (int)(Position.X - (Texture.Width * scale) / 2f),
-                (int)(Position.Y - (Texture.Height * scale) / 2f),
-                (int)(Texture.Width * scale),
-                (int)(Texture.Height * scale)
-            );
         protected float Scale { get => scale; }
         protected bool Flipped { get => flipped; }
         protected float Rotation { get => rotation; }
@@ -50,6 +44,8 @@ namespace DJGame.Models
         }
 
         // Méthodes de la classe...
+        public abstract Rectangle Hitbox();
+
         public void Remove()
         {
             SetSize(0);

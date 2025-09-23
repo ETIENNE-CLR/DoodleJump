@@ -17,30 +17,34 @@ namespace DJGame.Models.Agents
     {
         // Champs de la classe...
         protected Dictionary<string, Animation> animations;
-        protected string animationName; // idle, walk, run
-        protected Direction direction;
+        protected string animationName;
         protected bool isMoving;
 
         // Propriétés de la classe...
         protected Dictionary<string, Animation> Animations { get => animations; }
-        protected string CurrentAnimationKey { get => $"{animationName}_{direction}"; }
-        protected Animation CurrentAnimationObject { get => animations[CurrentAnimationKey]; }
+        protected Animation CurrentAnimationObject { get => animations[animationName]; }
         public bool IsMoving { get => isMoving; }
 
         // Constructeur la classe...
         protected AnimatedElement(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
             this.animations = new Dictionary<string, Animation>();
+            animationName = "";
             isMoving = false;
         }
 
         // Méthodes de la classe...
+        public override Rectangle Hitbox()
+        {
+            return animations[animationName].CurrentFrame;
+        }
+
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if (!animations.ContainsKey(CurrentAnimationKey)) return;
+            if (!animations.ContainsKey(animationName)) return;
 
             // Draw
-            var anim = animations[CurrentAnimationKey];
+            Animation anim = animations[animationName];
             SpriteEffects effects = this.Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             spriteBatch.Draw(Texture, Position, anim.CurrentFrame, Color.White, Rotation, Vector2.Zero, this.Scale, effects, 0f);
 
@@ -49,7 +53,7 @@ namespace DJGame.Models.Agents
             {
                 int thickness = 2;
                 var color = Color.Red;
-                var rect = Hitbox;
+                var rect = Hitbox();
 
                 // Tracer les 4 côtés
                 spriteBatch.Draw(Game1.WhitePixel, new Rectangle(rect.X, rect.Y, rect.Width, thickness), color); // Haut

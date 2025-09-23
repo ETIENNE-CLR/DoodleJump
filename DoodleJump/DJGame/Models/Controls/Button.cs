@@ -29,6 +29,11 @@ namespace DJGame.Models.Controls
         }
 
         // Méthodes de la classe...
+        public override Rectangle Hitbox()
+        {
+            return !clicked ? normalForm : clickedForm;
+        }
+
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             // Draw
@@ -41,7 +46,7 @@ namespace DJGame.Models.Controls
             {
                 int thickness = 2;
                 var color = Color.Red;
-                var rect = Hitbox;
+                var rect = Hitbox();
 
                 // Tracer les 4 côtés
                 spriteBatch.Draw(Game1.WhitePixel, new Rectangle(rect.X, rect.Y, rect.Width, thickness), color); // Haut
