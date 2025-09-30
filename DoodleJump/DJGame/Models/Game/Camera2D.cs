@@ -21,9 +21,8 @@ namespace DJGame.Models.Game
 
         public Camera2D(int screenHeight)
         {
-            // On définit la zone safe (par ex. 1/3 haut et bas de l’écran)
-            upperLimit = screenHeight *1/4;
-            lowerLimit = screenHeight * 2/3;
+            upperLimit = screenHeight * 1 / 3;
+            lowerLimit = screenHeight * 2 / 3;
         }
 
         public void Follow(Player player)

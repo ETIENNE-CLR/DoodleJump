@@ -18,8 +18,11 @@ namespace DJGame.Models.Agents
         private float gravityEnv;
         private float jumpForce;
         private List<Projectile> shoots;
+        private int score;
 
+        // Propriétés de la classe...
         public List<Projectile> Shoots { get => shoots; }
+        public int Score { get => score; }
 
         // Constructeur de la classe...
         public Player(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
@@ -28,6 +31,7 @@ namespace DJGame.Models.Agents
             jumpForce = velocity.Y;
             animationName = "idle";
             shoots = new List<Projectile>();
+            score = 0;
         }
 
         // Méthodes de la classe...

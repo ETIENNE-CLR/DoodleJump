@@ -97,6 +97,13 @@
 /processorParam:TextureFormat=Color
 /build:Controls/switch.png
 
+#begin monogameText.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:monogameText.spritefont
+
 #begin Sprites/default.png
 /importer:TextureImporter
 /processor:TextureProcessor

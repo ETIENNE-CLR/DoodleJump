@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DJGame.Models.Game;
 using DJGame.Models.Windows;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.MediaFoundation;
@@ -21,12 +23,15 @@ namespace DJGame
         public static Camera2D Camera { get; private set; }
         public static Rectangle ScreenDimensions { get => screenDimensions; }
         public static Texture2D WhitePixel { get => whitePixel; }
+        public static Random random { get; set; }
+        public static ContentManager PublicContent { get; private set; }
 
         // Constructeur de la classe...
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            random = new Random();
             IsMouseVisible = true;
         }
 
@@ -45,7 +50,7 @@ namespace DJGame
         private void ChangeScreenDimensions(int baseWidth = 640)
         {
             _graphics.PreferredBackBufferWidth = baseWidth;
-            _graphics.PreferredBackBufferHeight = ((baseWidth * 3) / 2);
+            _graphics.PreferredBackBufferHeight = (int)((double)(baseWidth * 3.5) / 2);
             Game1.screenDimensions = new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             _graphics.ApplyChanges();
         }
@@ -58,6 +63,7 @@ namespace DJGame
             whitePixel = new Texture2D(GraphicsDevice, 1, 1);
             whitePixel.SetData(new[] { Color.White });
             activeScene.LoadContent(Content);
+            PublicContent = Content;
         }
 
         protected override void Update(GameTime gameTime)

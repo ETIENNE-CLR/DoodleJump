@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DJGame.Enum;
 using DJGame.Interfaces;
 using DJGame.Models.Agents;
@@ -16,7 +17,6 @@ namespace DJGame.Models.Game
         // Champs de la classe...
         public const int NORME_SIZE = 50;
         private PaddleType type;
-        int baseSize;
 
         // Propriétés de la classe...
         public PaddleType Type { get => type; }
@@ -26,7 +26,6 @@ namespace DJGame.Models.Game
         {
             this.type = type;
             animationName = "idle";
-            baseSize = sizePourcent;
         }
 
         // Méthodes de la classe...
@@ -62,7 +61,8 @@ namespace DJGame.Models.Game
 
         public override void Update(GameTime gameTime)
         {
-            // co
+            // Pas d'update pour des plateformes
+            throw new NotImplementedException();
         }
 
         public void Scroll(float intensity)
