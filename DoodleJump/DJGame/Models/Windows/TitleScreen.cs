@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DJGame.Controllers;
 using DJGame.Interfaces;
 using DJGame.Models.Controls;
 using Microsoft.Xna.Framework;
@@ -38,7 +37,7 @@ namespace DJGame.Models.Windows
             {
                 GameScreen gs = new GameScreen();
                 gs.LoadContent(content);
-                SceneManager.activeScene = gs;
+                Game1.activeScene = gs;
             };
 
             btnOptions.LoadContent(content);
@@ -52,7 +51,6 @@ namespace DJGame.Models.Windows
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            base.DrawBackground(spriteBatch, gameTime);
             btnplay.Draw(spriteBatch, gameTime);
             btnOptions.Draw(spriteBatch, gameTime);
         }

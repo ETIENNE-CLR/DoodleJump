@@ -11,7 +11,7 @@ using SharpDX.DirectWrite;
 
 namespace DJGame.Models.Game
 {
-    internal class Paddle : AnimatedElement, IMonogameElement
+    public class Paddle : AnimatedElement, IMonogameElement
     {
         // Champs de la classe...
         public const int NORME_SIZE = 50;

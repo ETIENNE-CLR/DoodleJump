@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DJGame.Models.Game
 {
-    internal class Projectile : UiElement, IMonogameElement
+    public class Projectile : UiElement, IMonogameElement
     {
         // Constructeur de la classe...
         public Projectile(Vector2 position, bool showHitbox = false) : base(position, new Vector2(10, 10), 100, false, 0, showHitbox)

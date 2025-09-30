@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace DJGame.Models
 {
-    internal class Animation
+    public class Animation
     {
         // Champs de la classe
         private List<Rectangle> frames;

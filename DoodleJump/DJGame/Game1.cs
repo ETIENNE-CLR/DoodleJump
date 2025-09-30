@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using DJGame.Controllers;
+using DJGame.Models.Game;
 using DJGame.Models.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.MediaFoundation;
 
 namespace DJGame
 {
@@ -14,8 +15,10 @@ namespace DJGame
         private SpriteBatch _spriteBatch;
         private static Rectangle screenDimensions;
         private static Texture2D whitePixel;
+        public static MonogameWindow activeScene;
 
         // Propriétés de la classe...
+        public static Camera2D Camera { get; private set; }
         public static Rectangle ScreenDimensions { get => screenDimensions; }
         public static Texture2D WhitePixel { get => whitePixel; }
 
@@ -28,21 +31,23 @@ namespace DJGame
         }
 
         // Méthodes de la classe...
+        protected override void Initialize()
+        {
+            // TODO: Add your initialization logic here
+            this.Window.Title = "Doodle Jump";
+            ChangeScreenDimensions(520);
+            activeScene = new GameScreen();
+            Camera = new Camera2D(Game1.screenDimensions.Height);
+
+            base.Initialize();
+        }
+
         private void ChangeScreenDimensions(int baseWidth = 640)
         {
             _graphics.PreferredBackBufferWidth = baseWidth;
             _graphics.PreferredBackBufferHeight = ((baseWidth * 3) / 2);
             Game1.screenDimensions = new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             _graphics.ApplyChanges();
-        }
-
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-            this.Window.Title = "Doodle Jump";
-            ChangeScreenDimensions(520);
-
-            base.Initialize();
         }
 
         protected override void LoadContent()
@@ -52,9 +57,7 @@ namespace DJGame
             // TODO: use this.Content to load your game content here
             whitePixel = new Texture2D(GraphicsDevice, 1, 1);
             whitePixel.SetData(new[] { Color.White });
-
-            SceneManager.activeScene = new GameScreen();
-            SceneManager.activeScene.LoadContent(Content);
+            activeScene.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -63,7 +66,7 @@ namespace DJGame
                 Exit();
 
             // TODO: Add your update logic here
-            SceneManager.activeScene.Update(gameTime);
+            activeScene.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -73,8 +76,14 @@ namespace DJGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            // Dessiner le backgroud
             _spriteBatch.Begin();
-            SceneManager.activeScene.Draw(_spriteBatch, gameTime);
+            activeScene.DrawBackground(_spriteBatch, gameTime);
+            _spriteBatch.End();
+
+            // Dessiner le jeu
+            _spriteBatch.Begin(transformMatrix: Camera.Transform);
+            activeScene.Draw(_spriteBatch, gameTime);
             _spriteBatch.End();
 
             base.Draw(gameTime);

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DJGame.Models.Controls
 {
-    internal class BtnOptions : Button
+    public class BtnOptions : Button
     {
         public BtnOptions(Action toDo, Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(toDo, position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {

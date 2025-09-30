@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DJGame.Enum
 {
-    internal enum Direction
+    public enum Direction
     {
         Top,
         Down,

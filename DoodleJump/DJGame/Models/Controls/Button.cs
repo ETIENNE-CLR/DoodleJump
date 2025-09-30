@@ -14,7 +14,7 @@ using SharpDX.Direct3D9;
 
 namespace DJGame.Models.Controls
 {
-    internal abstract class Button : UiElement, IMonogameElement
+    public abstract class Button : UiElement, IMonogameElement
     {
         // Champs de la classe...
         public Action actionToDo;

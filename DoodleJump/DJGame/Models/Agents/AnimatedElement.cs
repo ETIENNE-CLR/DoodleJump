@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DJGame.Controllers;
 using DJGame.Enum;
 using DJGame.Interfaces;
 using Microsoft.Xna.Framework;
@@ -13,7 +12,7 @@ using SharpDX.Direct2D1.Effects;
 
 namespace DJGame.Models.Agents
 {
-    internal abstract class AnimatedElement : UiElement, IMonogameElement
+    public abstract class AnimatedElement : UiElement, IMonogameElement
     {
         // Champs de la classe...
         protected Dictionary<string, Animation> animations;

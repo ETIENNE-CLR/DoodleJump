@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DJGame.Controllers;
 using DJGame.Interfaces;
 using DJGame.Models.Game;
 using Microsoft.Xna.Framework;
@@ -13,13 +12,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DJGame.Models.Agents
 {
-    internal class Player : AnimatedElement, IMonogameElement
+    public class Player : AnimatedElement, IMonogameElement
     {
         // Champs de la classe...
-        private bool isJumping;
         private float gravityEnv;
         private float jumpForce;
-        private bool isFalling;
         private List<Projectile> shoots;
 
         public List<Projectile> Shoots { get => shoots; }
@@ -27,10 +24,8 @@ namespace DJGame.Models.Agents
         // Constructeur de la classe...
         public Player(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
-            isJumping = false;
-            gravityEnv = 0.3f;
-            jumpForce = 12f;
-            isFalling = false;
+            gravityEnv = 0.25f;
+            jumpForce = velocity.Y;
             animationName = "idle";
             shoots = new List<Projectile>();
         }
@@ -88,22 +83,18 @@ namespace DJGame.Models.Agents
             const int maxFallSpeed = 9;
             velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
             position.Y += velocity.Y;
-            isFalling = velocity.Y > 0;
 
             // Gestion des animations
             CurrentAnimationObject.Update(gameTime);
             if (animationName.Contains("jump") && CurrentAnimationObject.Finished)
             {
                 animationName = animationName.Contains("shoot") ? "shoot" : "idle";
-                isJumping = false;
             }
         }
 
         public void Jump()
         {
             animationName = "jump";
-            isJumping = true;
-            isFalling = false;
             velocity.Y = -jumpForce;
         }
 

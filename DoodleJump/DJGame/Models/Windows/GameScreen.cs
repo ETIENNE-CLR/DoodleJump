@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using DJGame.Controllers;
 using DJGame.Enum;
 using DJGame.Interfaces;
 using DJGame.Models.Agents;
@@ -16,7 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DJGame.Models.Windows
 {
-    internal class GameScreen : MonogameWindow, IMonogameElement
+    public class GameScreen : MonogameWindow, IMonogameElement
     {
         // Champs de la classe...
         private Player ply;
@@ -25,7 +24,7 @@ namespace DJGame.Models.Windows
         // Constructeur de la classe...
         public GameScreen()
         {
-            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(7, 10), 100, false, 0, false);
+            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 10), 100, false, 0, false);
             paddles = new List<Paddle>();
 
             int y = Game1.ScreenDimensions.Height * 3 / 4;
@@ -55,8 +54,8 @@ namespace DJGame.Models.Windows
 
         public override void Update(GameTime gameTime)
         {
-            int suppressionMarginPaddle = 0;
             ply.Update(gameTime);
+            Game1.Camera.Follow(ply);
 
             // Update des platformes
             for (int i = paddles.Count - 1; i > 0; i--)
@@ -64,23 +63,13 @@ namespace DJGame.Models.Windows
                 Paddle p = paddles[i];
                 p.Update(gameTime);
 
-                // Gestion de la caméra
-                if (ply.Position.Y < Game1.ScreenDimensions.Height * 1 / 3)
-                {
-                    p.Scroll(10);
-                }
-
                 // Collisions
                 if (p.Hitbox().Intersects(ply.Hitbox()))
                     ply.Jump();
 
                 // Suppression des paddles en dessous de l'écran
-                if (p.Position.Y + suppressionMarginPaddle > Game1.ScreenDimensions.Bottom)
+                if (p.Position.Y > Game1.Camera.Position.Y + Game1.ScreenDimensions.Bottom)
                     paddles.Remove(p);
-
-                // Game Over
-                if (ply.Position.Y > Game1.ScreenDimensions.Bottom)
-                    p.Scroll(-10);
             }
 
             // Shoots
@@ -90,7 +79,6 @@ namespace DJGame.Models.Windows
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            base.DrawBackground(spriteBatch, gameTime);
             foreach (Paddle p in paddles)
                 p.Draw(spriteBatch, gameTime);
             foreach (Projectile s in ply.Shoots)
