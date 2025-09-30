@@ -21,6 +21,7 @@ namespace DJGame.Models.Windows
         // Champs de la classe...
         private Texture2D top;
         private SpriteFont font;
+        private DJText scoreTextEl;
         private Player ply;
         private List<Paddle> paddles;
         private float highestPaddleY;
