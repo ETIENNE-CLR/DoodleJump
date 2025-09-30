@@ -18,18 +18,18 @@ namespace DJGame.Models
         protected Vector2 position;
         protected Vector2 velocity;
         private float scale;
-        private bool flipped;
+        public bool flipped;
         private float rotation;
         private bool showHitbox;
 
         // Propriétés de la classe...
         public Vector2 Position { get => position; }
         protected Texture2D Texture { get => texture; }
-        protected Vector2 Velocity { get => velocity; }
-        protected float Scale { get => scale; }
-        protected bool Flipped { get => flipped; }
-        protected float Rotation { get => rotation; }
-        protected bool ShowHitbox { get => showHitbox; }
+        public Vector2 Velocity { get => velocity; }
+        public float Scale { get => scale; }
+        public bool Flipped { get => flipped; }
+        public float Rotation { get => rotation; }
+        public bool ShowHitbox { get => showHitbox; }
 
 
         // Constructeur de la classe...

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DJGame.Controllers;
 using DJGame.Interfaces;
+using DJGame.Models.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,15 +20,19 @@ namespace DJGame.Models.Agents
         private float gravityEnv;
         private float jumpForce;
         private bool isFalling;
+        private List<Projectile> shoots;
+
+        public List<Projectile> Shoots { get => shoots; }
 
         // Constructeur de la classe...
         public Player(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
             isJumping = false;
-            gravityEnv = 0.26f;
-            jumpForce = 11f;
+            gravityEnv = 0.3f;
+            jumpForce = 12f;
             isFalling = false;
             animationName = "idle";
+            shoots = new List<Projectile>();
         }
 
         // Méthodes de la classe...
@@ -59,6 +64,25 @@ namespace DJGame.Models.Agents
 
         public override void Update(GameTime gameTime)
         {
+            // Contrôles
+            KeyboardState kstate = Keyboard.GetState();
+            if (kstate.IsKeyDown(Keys.Left) && Position.X > Game1.ScreenDimensions.X)
+            {
+                this.position.X -= this.velocity.X;
+                flipped = true;
+            }
+            if (kstate.IsKeyDown(Keys.Right) && (Position.X + Hitbox().Width) < Game1.ScreenDimensions.Width)
+            {
+                this.position.X += this.velocity.X;
+                flipped = false;
+            }
+
+            if (kstate.IsKeyDown(Keys.Up))
+            {
+                animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";
+                // Shoot();
+            }
+
             // gravité
             velocity.Y += gravityEnv;
             const int maxFallSpeed = 9;
@@ -81,6 +105,12 @@ namespace DJGame.Models.Agents
             isJumping = true;
             isFalling = false;
             velocity.Y = -jumpForce;
+        }
+
+        private void Shoot()
+        {
+            Vector2 positionNewProjectile = Position;
+            shoots.Add(new Projectile(positionNewProjectile, false));
         }
     }
 }

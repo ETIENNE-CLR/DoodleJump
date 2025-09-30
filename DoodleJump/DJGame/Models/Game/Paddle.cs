@@ -64,5 +64,10 @@ namespace DJGame.Models.Game
         {
             // co
         }
+
+        public void Scroll(float intensity)
+        {
+            position.Y += intensity;
+        }
     }
 }
