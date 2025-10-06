@@ -41,7 +41,7 @@ namespace DJGame
             // TODO: Add your initialization logic here
             this.Window.Title = "Doodle Jump";
             ChangeScreenDimensions(520);
-            activeScene = new TitleScreen();
+            activeScene = new GameScreen();
             Camera = new Camera2D(Game1.screenDimensions.Height);
 
             base.Initialize();
@@ -88,10 +88,10 @@ namespace DJGame
             _spriteBatch.End();
 
             // Dessiner le jeu
-            if (activeScene is not GameScreen)
-                _spriteBatch.Begin();
-            else
+            if (activeScene is GameScreen)
                 _spriteBatch.Begin(transformMatrix: Camera.Transform);
+            else
+                _spriteBatch.Begin();
             activeScene.Draw(_spriteBatch, gameTime);
             _spriteBatch.End();
 

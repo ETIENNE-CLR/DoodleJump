@@ -51,7 +51,7 @@ namespace DJGame.Models.Agents
             // Draw
             Animation anim = animations[animationName];
             SpriteEffects effects = this.Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            spriteBatch.Draw(Texture, Position, anim.CurrentFrame, Color.White, Rotation, Vector2.Zero, this.Scale, effects, 0f);
+            spriteBatch.Draw(Texture, Position, anim.CurrentFrame, Color.White, Rotation, Vector2.Zero, Scale, effects, 0f);
 
             // Afficher la hitbox
             if (ShowHitbox)

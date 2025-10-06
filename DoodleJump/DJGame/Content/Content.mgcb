@@ -104,6 +104,12 @@
 /processorParam:TextureFormat=Compressed
 /build:monogameText.spritefont
 
+#begin Sounds/jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/jump.wav
+
 #begin Sprites/default.png
 /importer:TextureImporter
 /processor:TextureProcessor

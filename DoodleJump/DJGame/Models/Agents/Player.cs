@@ -87,6 +87,7 @@ namespace DJGame.Models.Agents
             const int maxFallSpeed = 9;
             velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
             position.Y += velocity.Y;
+            score += (int)Math.Min(velocity.Y, maxFallSpeed);
 
             // Gestion des animations
             CurrentAnimationObject.Update(gameTime);

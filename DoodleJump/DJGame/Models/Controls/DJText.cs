@@ -14,44 +14,74 @@ namespace DJGame.Models.Controls
     public class DJText : UiElement, IMonogameElement
     {
         // Champs de la classe...
-        private List<AnimatedElement> letters;
+        private List<Rectangle> letters;
+        private Dictionary<char, Rectangle> dictionnary;
         private string text;
 
         // Propriétés de la classe...
+        public string Text { get => text; }
+
         // Constructeur de la classe...
-        public DJText(string text, Vector2 position, Vector2 velocity, float rotation = 0, bool showHitbox = false) : base(position, velocity, 100, false, rotation, showHitbox)
+        public DJText(string text, Vector2 position, Vector2 velocity, float rotation = 0, bool showHitbox = false) : base(position, velocity, 95, false, rotation, showHitbox)
         {
+            dictionnary = new Dictionary<char, Rectangle>();
+            letters = new List<Rectangle>();
             updateText(text);
         }
 
         // Méthodes de la classe...
         public override Rectangle Hitbox()
         {
-            throw new NotImplementedException();
+            int w = 0;
+            int h = 0;
+            foreach (Rectangle l in letters)
+            {
+                w += l.Width;
+                h = Math.Max(h, l.Height);
+            }
+            return new Rectangle((int)Position.X, (int)Position.Y, w, h);
         }
 
         public override void LoadContent(ContentManager content)
         {
-            for (int i = 0; i < text.Length; i++)
-            {
-                //letters.Add(new DJLetter(text[i]));
-            }
+            texture = content.Load<Texture2D>("Tops/default");
+            dictionnary.Add('1', Animation.GenerateAnimation(9, 33, 644, 1, 0, 0, 1)[0]);
+            dictionnary.Add('2', Animation.GenerateAnimation(29, 33, 655, 1, 0, 0, 1)[0]);
+            dictionnary.Add('3', Animation.GenerateAnimation(25, 33, 688, 1, 0, 0, 1)[0]);
+            dictionnary.Add('4', Animation.GenerateAnimation(22, 33, 714, 1, 0, 0, 1)[0]);
+            dictionnary.Add('5', Animation.GenerateAnimation(27, 33, 738, 1, 0, 0, 1)[0]);
+            dictionnary.Add('6', Animation.GenerateAnimation(26, 33, 769, 1, 0, 0, 1)[0]);
+            dictionnary.Add('7', Animation.GenerateAnimation(26, 33, 798, 1, 0, 0, 1)[0]);
+            dictionnary.Add('8', Animation.GenerateAnimation(24, 33, 825, 1, 0, 0, 1)[0]);
+            dictionnary.Add('9', Animation.GenerateAnimation(22, 33, 853, 1, 0, 0, 1)[0]);
+            dictionnary.Add('0', Animation.GenerateAnimation(25, 33, 878, 1, 0, 0, 1)[0]);
         }
 
         public void updateText(string text)
         {
             this.text = text;
-            letters = new List<AnimatedElement>();
+            letters.Clear();
+            foreach (char c in this.text)
+                if (dictionnary.ContainsKey(c))
+                    letters.Add(dictionnary[c]);
         }
 
         public override void Update(GameTime gameTime)
         {
+            // Update pour du texte ?
             throw new NotImplementedException();
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            throw new NotImplementedException();
+            Vector2 copy = new Vector2(Position.X, Position.Y);
+            int letterSpacing = 5;
+
+            foreach (Rectangle l in letters)
+            {
+                spriteBatch.Draw(texture, copy, l, Color.White, Rotation, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+                copy.X += l.Width + letterSpacing;
+            }
         }
     }
 }

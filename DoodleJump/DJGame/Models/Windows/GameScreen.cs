@@ -20,7 +20,6 @@ namespace DJGame.Models.Windows
     {
         // Champs de la classe...
         private Texture2D top;
-        private SpriteFont font;
         private DJText scoreTextEl;
         private Player ply;
         private List<Paddle> paddles;
@@ -29,8 +28,10 @@ namespace DJGame.Models.Windows
         // Constructeur de la classe...
         public GameScreen()
         {
+            int marginScore = 12;
             ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 10), 100, false, 0, false);
             paddles = new List<Paddle>();
+            scoreTextEl = new DJText("", new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
 
             // Ajout de paddle de base pour test
             int y = Game1.ScreenDimensions.Height * 3 / 4;
@@ -51,8 +52,8 @@ namespace DJGame.Models.Windows
         public override void LoadContent(ContentManager content)
         {
             bgTexture = content.Load<Texture2D>("Backgrounds/Game/default");
-            font = content.Load<SpriteFont>("monogameText");
             top = content.Load<Texture2D>("Tops/default");
+            scoreTextEl.LoadContent(content);
 
             ply.LoadContent(content);
             foreach (Paddle p in paddles)
@@ -113,6 +114,9 @@ namespace DJGame.Models.Windows
             // Shoots
             foreach (Projectile s in ply.Shoots)
                 s.Update(gameTime);
+
+            // Update score
+            scoreTextEl.updateText(ply.Score.ToString());
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -126,8 +130,8 @@ namespace DJGame.Models.Windows
             // Element fixe
             spriteBatch.End();
             spriteBatch.Begin();
-            // spriteBatch.DrawString(font, ply.Score.ToString(), new Vector2(0, 0), Color.Black);
             spriteBatch.Draw(top, new Vector2(0, 0), new Rectangle(0, 0, 640, 92), Color.White);
+            scoreTextEl.Draw(spriteBatch, gameTime);
         }
     }
 }
