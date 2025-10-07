@@ -22,27 +22,30 @@ namespace DJGame.Models.Windows
         // Champs de la classe...
         private Texture2D top;
         private DJNumberFont scoreTextEl;
-        private Player ply;
+        private Player player;
         private List<Paddle> paddles;
         private float highestPaddleY;
+        GameOverScreen gameOverScreen;
 
         // Constructeur de la classe...
         public GameScreen()
         {
             int marginScore = 17;
-            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y));
+            player = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y));
             paddles = new List<Paddle>();
-            scoreTextEl = new DJNumberFont(ply.Score, new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
+            scoreTextEl = new DJNumberFont(player.Score, new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
+            gameOverScreen = new GameOverScreen();
         }
 
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
             // première plateforme de départ
-            ply.LoadContent(content);
+            player.LoadContent(content);
             float startY = Game1.Camera.Position.Y + Game1.ScreenDimensions.Height - 100;
-            Paddle startPlatform = new Paddle(PaddleType.SIMPLE, new Vector2((Game1.ScreenDimensions.Width / 2) - (ply.Hitbox().Width * 1 / 4), startY));
+            Paddle startPlatform = new Paddle(PaddleType.SIMPLE, new Vector2((Game1.ScreenDimensions.Width / 2) - (player.Hitbox().Width * 1 / 4), startY));
             paddles.Add(startPlatform);
+            gameOverScreen.LoadContent(content);
 
             // Texture et UI
             bgTexture = content.Load<Texture2D>("Backgrounds/Game/default");
@@ -52,21 +55,21 @@ namespace DJGame.Models.Windows
             // foreach LoadContent
             foreach (Paddle p in paddles)
                 p.LoadContent(content);
-            foreach (Projectile s in ply.Shoots)
+            foreach (Projectile s in player.Shoots)
                 s.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
         {
             // Joueur
-            ply.Update(gameTime);
+            player.Update(gameTime);
 
             // Mouvement du joueur
             KeyboardState kstate = Keyboard.GetState();
-            ply.Move(kstate);
+            player.Move(kstate);
 
             // Update des platformes
-            Game1.Camera.Follow(ply);
+            Game1.Camera.Follow(player);
             for (int i = paddles.Count - 1; i >= 0; i--)
             {
                 Paddle p = paddles[i];
@@ -74,13 +77,13 @@ namespace DJGame.Models.Windows
                 highestPaddleY = paddles.Min(p => p.Position.Y);
 
                 // Il y a eu une collision
-                if (p.Hitbox().Intersects(ply.Hitbox()) && ply.Velocity.Y > 0)
+                if (p.Hitbox().Intersects(player.Hitbox()) && player.Velocity.Y > 0)
                 {
                     // Quel type ?
                     switch (p.Type)
                     {
                         case PaddleType.SIMPLE:
-                            ply.Jump();
+                            player.Jump();
                             break;
 
                         case PaddleType.BREAKABLE:
@@ -101,32 +104,34 @@ namespace DJGame.Models.Windows
                     paddles.RemoveAt(i);
 
                 // Check Game Over
-                bool isGameOver = false;
+                bool gameOver = (player.Position.Y > Game1.Camera.lowerLimit + Game1.ScreenDimensions.Height);
+                if (gameOver)
+                    Game1.activeScene = gameOverScreen;
             }
 
             // Nouvelles plateformes
             PlatformsGeneration(gameTime);
 
             // Shoots
-            for (int i = ply.Shoots.Count - 1; i >= 0; i--)
+            for (int i = player.Shoots.Count - 1; i >= 0; i--)
             {
-                Projectile s = ply.Shoots[i];
+                Projectile s = player.Shoots[i];
                 s.Update(gameTime);
-                if (s.Position.Y < ply.Position.Y - Game1.ScreenDimensions.Center.Y)
-                    ply.ShootOutScreen(i);
+                if (s.Position.Y < player.Position.Y - Game1.ScreenDimensions.Center.Y)
+                    player.ShootOutScreen(i);
             }
 
             // Update score view
-            scoreTextEl.UpdateNumberText(ply.Score);
+            scoreTextEl.UpdateNumberText(player.Score);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             foreach (Paddle p in paddles)
                 p.Draw(spriteBatch, gameTime);
-            foreach (Projectile s in ply.Shoots)
+            foreach (Projectile s in player.Shoots)
                 s.Draw(spriteBatch, gameTime);
-            ply.Draw(spriteBatch, gameTime);
+            player.Draw(spriteBatch, gameTime);
 
             // Element fixe
             spriteBatch.End();
@@ -148,7 +153,7 @@ namespace DJGame.Models.Windows
 
             // Difficulté : dépend du score et du temps
             float timeFactor = (float)(gameTime.TotalGameTime.TotalSeconds / 60f);
-            float difficulty = Math.Clamp((ply.Score / 2000f) + (timeFactor * 0.2f), 0f, 1f);
+            float difficulty = Math.Clamp((player.Score / 2000f) + (timeFactor * 0.2f), 0f, 1f);
 
             // Espacement moyen et variation
             int baseSpacing = (int)MathHelper.Lerp(80, 200, difficulty);

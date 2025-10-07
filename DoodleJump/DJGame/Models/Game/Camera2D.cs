@@ -16,8 +16,8 @@ namespace DJGame.Models.Game
         public Matrix Transform { get; private set; }
         public Vector2 Position { get; private set; }
 
-        private float upperLimit; // Y de la ligne du haut
-        private float lowerLimit; // Y de la ligne du bas
+        public float upperLimit { get; private set; } // Y de la ligne du haut
+        public float lowerLimit { get; private set; } // Y de la ligne du bas
 
         public Camera2D(int screenHeight)
         {

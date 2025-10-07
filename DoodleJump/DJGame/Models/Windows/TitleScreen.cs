@@ -20,19 +20,27 @@ namespace DJGame.Models.Windows
         private BtnPlay btnPlay;
         private BtnOptions btnOptions;
         private Paddle platform;
-        private Player agent;
+        private Player player;
+        private GameScreen gameScreen;
 
         // Constructeur de la classe...
         public TitleScreen()
         {
             int btnX = (Game1.ScreenDimensions.Width * 1 / 4) - 50;
             int btnSize = 85;
+            gameScreen = new GameScreen();
 
-            // Bouton principales
-            btnPlay = new BtnPlay(new Action(() => { }), new Vector2(btnX, (Game1.ScreenDimensions.Height * 1 / 4) - 35), Vector2.Zero, btnSize, false, 0, false);
-            btnOptions = new BtnOptions(new Action(() => { }), new Vector2(btnX, (Game1.ScreenDimensions.Center.Y * 3 / 5) + 10), Vector2.Zero, btnSize, false, 0, false);
+            // Bouton principaux
+            btnPlay = new BtnPlay(new Action(() =>
+            {
+                Game1.activeScene = gameScreen;
+            }), new Vector2(btnX, (Game1.ScreenDimensions.Height * 1 / 4) - 35), Vector2.Zero, btnSize, false, 0, false);
+            btnOptions = new BtnOptions(new Action(() =>
+            {
+                // CODE
+            }), new Vector2(btnX, (Game1.ScreenDimensions.Center.Y * 3 / 5) + 10), Vector2.Zero, btnSize, false, 0, false);
             platform = new Paddle(PaddleType.SIMPLE, new Vector2((Game1.ScreenDimensions.Width * 1 / 4) - 60, Game1.ScreenDimensions.Height * 3 / 4), 55);
-            agent = new Player(new Vector2(platform.Position.X + 11, platform.Position.Y - 50), new Vector2(0, 10));
+            player = new Player(new Vector2(platform.Position.X + 11, platform.Position.Y - 50), new Vector2(0, 10));
         }
 
         // Méthodes de la classe...
@@ -41,35 +49,30 @@ namespace DJGame.Models.Windows
             // Base
             bgTexture = content.Load<Texture2D>("Backgrounds/View/main_menu");
             platform.LoadContent(content);
-            agent.LoadContent(content);
+            player.LoadContent(content);
+            gameScreen.LoadContent(content);
 
             // Boutons
             btnOptions.LoadContent(content);
             btnPlay.LoadContent(content);
-            btnPlay.actionToDo = () =>
-            {
-                GameScreen gs = new GameScreen();
-                gs.LoadContent(content);
-                Game1.activeScene = gs;
-            };
         }
 
         public override void Update(GameTime gameTime)
         {
             // Main
-            agent.Update(gameTime);
+            player.Update(gameTime);
             btnPlay.Update(gameTime);
             btnOptions.Update(gameTime);
 
             // Collisions
-            if (platform.Hitbox().Intersects(agent.Hitbox()) && agent.Velocity.Y > 0)
-                agent.Jump();
+            if (platform.Hitbox().Intersects(player.Hitbox()) && player.Velocity.Y > 0)
+                player.Jump();
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             platform.Draw(spriteBatch, gameTime);
-            agent.Draw(spriteBatch, gameTime);
+            player.Draw(spriteBatch, gameTime);
             btnPlay.Draw(spriteBatch, gameTime);
             btnOptions.Draw(spriteBatch, gameTime);
         }
