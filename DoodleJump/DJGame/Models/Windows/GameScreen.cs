@@ -28,7 +28,7 @@ namespace DJGame.Models.Windows
         // Constructeur de la classe...
         public GameScreen()
         {
-            int marginScore = 12;
+            int marginScore = 17;
             ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 12), 100, false, 0, false);
             paddles = new List<Paddle>();
             scoreTextEl = new DJNumberFont(ply.Score, new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
@@ -37,11 +37,18 @@ namespace DJGame.Models.Windows
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
+            // première plateforme de départ
+            ply.LoadContent(content);
+            float startY = Game1.Camera.Position.Y + Game1.ScreenDimensions.Height - 100;
+            Paddle startPlatform = new Paddle(PaddleType.SIMPLE, new Vector2((Game1.ScreenDimensions.Width / 2) - (ply.Hitbox().Width * 1 / 4), startY));
+            paddles.Add(startPlatform);
+
+            // Texture et UI
             bgTexture = content.Load<Texture2D>("Backgrounds/Game/default");
             top = content.Load<Texture2D>("Tops/default");
             scoreTextEl.LoadContent(content);
 
-            ply.LoadContent(content);
+            // foreach LoadContent
             foreach (Paddle p in paddles)
                 p.LoadContent(content);
             foreach (Projectile s in ply.Shoots)
@@ -55,7 +62,7 @@ namespace DJGame.Models.Windows
             Game1.Camera.Follow(ply);
 
             // Update des platformes
-            for (int i = paddles.Count - 1; i > 0; i--)
+            for (int i = paddles.Count - 1; i >= 0; i--)
             {
                 Paddle p = paddles[i];
                 highestPaddleY = paddles.Min(p => p.Position.Y);
@@ -81,8 +88,8 @@ namespace DJGame.Models.Windows
                     ply.ShootOutScreen(i);
             }
 
-            // Update score
-            scoreTextEl.UpdateNumberText(ply.Shoots.Count);
+            // Update score view
+            scoreTextEl.UpdateNumberText(ply.Score);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -107,16 +114,7 @@ namespace DJGame.Models.Windows
         private void PlatformsGeneration(GameTime gameTime)
         {
             const int marginTop = 300;
-
-            // Si aucune plateforme, on en crée une de départ
-            if (paddles.Count == 0)
-            {
-                float startY = Game1.Camera.Position.Y + Game1.ScreenDimensions.Height - 100;
-                Paddle startPlatform = new Paddle(PaddleType.SIMPLE, new Vector2(Game1.ScreenDimensions.Width / 2 - 50, startY));
-                startPlatform.LoadContent(Game1.PublicContent);
-                paddles.Add(startPlatform);
-            }
-
+    
             // Trouve la plateforme la plus haute (donc la plus petite valeur Y)
             float currentHighestY = paddles.Min(p => p.Position.Y);
 
