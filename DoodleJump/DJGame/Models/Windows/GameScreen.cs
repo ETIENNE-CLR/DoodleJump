@@ -73,16 +73,16 @@ namespace DJGame.Models.Windows
             PlatformsGeneration(gameTime);
 
             // Shoots
-            for (int i = ply.Shoots.Count; i > 0; i--)
+            for (int i = ply.Shoots.Count - 1; i >= 0; i--)
             {
                 Projectile s = ply.Shoots[i];
                 s.Update(gameTime);
-                if (s.Position.Y > Game1.ScreenDimensions.Top - 300)
+                if (s.Position.Y < ply.Position.Y - Game1.ScreenDimensions.Center.Y)
                     ply.ShootOutScreen(i);
             }
 
             // Update score
-            scoreTextEl.UpdateNumberText(ply.Score);
+            scoreTextEl.UpdateNumberText(ply.Shoots.Count);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using DJGame.Interfaces;
@@ -33,6 +34,7 @@ namespace DJGame.Models.Agents
             animationName = "idle";
             shoots = new List<Projectile>();
             score = 0;
+            highestY = 0;
         }
 
         // Méthodes de la classe...
@@ -80,7 +82,7 @@ namespace DJGame.Models.Agents
             if (kstate.IsKeyDown(Keys.Up))
             {
                 animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";
-                // Shoot();
+                Shoot();
             }
 
             // gravité
@@ -113,13 +115,15 @@ namespace DJGame.Models.Agents
         private void Shoot()
         {
             Vector2 positionNewProjectile = Position;
-            Projectile newProj = new Projectile(positionNewProjectile, false);
+            Projectile newProj = new Projectile(positionNewProjectile);
             newProj.LoadContent(Game1.PublicContent);
             shoots.Add(newProj);
         }
 
         public void ShootOutScreen(int index)
         {
+            if (index < 0 || index > shoots.Count)
+                throw new ArgumentOutOfRangeException("index");
             shoots.RemoveAt(index);
         }
     }
