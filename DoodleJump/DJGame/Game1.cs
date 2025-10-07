@@ -41,7 +41,7 @@ namespace DJGame
             // TODO: Add your initialization logic here
             this.Window.Title = "Doodle Jump";
             ChangeScreenDimensions(520);
-            activeScene = new GameScreen();
+            activeScene = new TitleScreen();
             Camera = new Camera2D(Game1.screenDimensions.Height);
 
             base.Initialize();

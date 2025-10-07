@@ -13,6 +13,7 @@ using DJGame.Models.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace DJGame.Models.Windows
 {
@@ -29,7 +30,7 @@ namespace DJGame.Models.Windows
         public GameScreen()
         {
             int marginScore = 17;
-            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 12), 100, false, 0, false);
+            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y));
             paddles = new List<Paddle>();
             scoreTextEl = new DJNumberFont(ply.Score, new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
         }
@@ -59,9 +60,13 @@ namespace DJGame.Models.Windows
         {
             // Joueur
             ply.Update(gameTime);
-            Game1.Camera.Follow(ply);
+
+            // Mouvement du joueur
+            KeyboardState kstate = Keyboard.GetState();
+            ply.Move(kstate);
 
             // Update des platformes
+            Game1.Camera.Follow(ply);
             for (int i = paddles.Count - 1; i >= 0; i--)
             {
                 Paddle p = paddles[i];

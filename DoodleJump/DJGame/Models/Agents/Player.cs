@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DJGame.Interfaces;
 using DJGame.Models.Game;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,12 +22,15 @@ namespace DJGame.Models.Agents
         private List<Projectile> shoots;
         private int score;
         private float highestY;
+        private SoundEffect jumpSoundEffect;
 
         // Propriétés de la classe...
         public List<Projectile> Shoots { get => shoots; }
         public int Score { get => score; }
 
         // Constructeur de la classe...
+        public Player(Vector2 position) : this(position, new Vector2(6, 12), 100, false, 0, false) { }
+        public Player(Vector2 position, Vector2 velocity) : this(position, velocity, 100, false, 0, false) { }
         public Player(Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
             gravityEnv = 0.25f;
@@ -35,13 +39,14 @@ namespace DJGame.Models.Agents
             shoots = new List<Projectile>();
             score = 0;
             highestY = 0;
+            jumpSoundEffect = null;
         }
-
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
         {
             // Init
             texture = content.Load<Texture2D>("Sprites/player");
+            jumpSoundEffect = content.Load<SoundEffect>("Sounds/jump");
 
             // Animations
             float intervalAnim = 350;
@@ -66,25 +71,6 @@ namespace DJGame.Models.Agents
 
         public override void Update(GameTime gameTime)
         {
-            // Contrôles
-            KeyboardState kstate = Keyboard.GetState();
-            if (kstate.IsKeyDown(Keys.Left) && Position.X > Game1.ScreenDimensions.X)
-            {
-                this.position.X -= this.velocity.X;
-                flipped = true;
-            }
-            if (kstate.IsKeyDown(Keys.Right) && (Position.X + Hitbox().Width) < Game1.ScreenDimensions.Width)
-            {
-                this.position.X += this.velocity.X;
-                flipped = false;
-            }
-
-            if (kstate.IsKeyDown(Keys.Up))
-            {
-                animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";
-                Shoot();
-            }
-
             // gravité
             velocity.Y += gravityEnv;
             const int maxFallSpeed = 15;
@@ -106,10 +92,32 @@ namespace DJGame.Models.Agents
             }
         }
 
+        public void Move(KeyboardState kstate)
+        {
+            if (kstate.IsKeyDown(Keys.Left) && Position.X > Game1.ScreenDimensions.X)
+            {
+                position.X -= velocity.X;
+                flipped = true;
+            }
+
+            if (kstate.IsKeyDown(Keys.Right) && (Position.X + Hitbox().Width) < Game1.ScreenDimensions.Width)
+            {
+                position.X += velocity.X;
+                flipped = false;
+            }
+
+            if (kstate.IsKeyDown(Keys.Up))
+            {
+                animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";
+                Shoot();
+            }
+        }
+
         public void Jump()
         {
             animationName = "jump";
             velocity.Y = -jumpForce;
+            jumpSoundEffect.Play();
         }
 
         private void Shoot()

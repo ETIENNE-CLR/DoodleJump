@@ -74,7 +74,7 @@ namespace DJGame.Models.Controls
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             Vector2 copy = new Vector2(Position.X, Position.Y);
-            int letterSpacing = 5;
+            int letterSpacing = 2;
 
             // Draw chaque digitsToDisplay
             foreach (Rectangle l in digitsToDisplay)
