@@ -19,6 +19,7 @@ namespace DJGame.Models.Agents
         private float jumpForce;
         private List<Projectile> shoots;
         private int score;
+        private float highestY;
 
         // Propriétés de la classe...
         public List<Projectile> Shoots { get => shoots; }
@@ -87,8 +88,13 @@ namespace DJGame.Models.Agents
             const int maxFallSpeed = 15;
             velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
             position.Y += velocity.Y;
-            if (Position.Y > Game1.Camera.Position.Y)
-                score += (int)Math.Min(velocity.Y, maxFallSpeed);
+
+            // Incrémentation du score
+            if (position.Y < highestY)
+            {
+                highestY = position.Y;
+                score = (int)(Game1.ScreenDimensions.Height - highestY);
+            }
 
             // Gestion des animations
             CurrentAnimationObject.Update(gameTime);
@@ -107,7 +113,14 @@ namespace DJGame.Models.Agents
         private void Shoot()
         {
             Vector2 positionNewProjectile = Position;
-            shoots.Add(new Projectile(positionNewProjectile, false));
+            Projectile newProj = new Projectile(positionNewProjectile, false);
+            newProj.LoadContent(Game1.PublicContent);
+            shoots.Add(newProj);
+        }
+
+        public void ShootOutScreen(int index)
+        {
+            shoots.RemoveAt(index);
         }
     }
 }

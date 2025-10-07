@@ -20,7 +20,7 @@ namespace DJGame.Models.Windows
     {
         // Champs de la classe...
         private Texture2D top;
-        private DJText scoreTextEl;
+        private DJNumberFont scoreTextEl;
         private Player ply;
         private List<Paddle> paddles;
         private float highestPaddleY;
@@ -31,7 +31,7 @@ namespace DJGame.Models.Windows
             int marginScore = 12;
             ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 12), 100, false, 0, false);
             paddles = new List<Paddle>();
-            scoreTextEl = new DJText("", new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
+            scoreTextEl = new DJNumberFont(ply.Score, new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
         }
 
         // Méthodes de la classe...
@@ -73,11 +73,16 @@ namespace DJGame.Models.Windows
             PlatformsGeneration(gameTime);
 
             // Shoots
-            foreach (Projectile s in ply.Shoots)
+            for (int i = ply.Shoots.Count; i > 0; i--)
+            {
+                Projectile s = ply.Shoots[i];
                 s.Update(gameTime);
+                if (s.Position.Y > Game1.ScreenDimensions.Top - 300)
+                    ply.ShootOutScreen(i);
+            }
 
             // Update score
-            scoreTextEl.updateText(ply.Score.ToString());
+            scoreTextEl.UpdateNumberText(ply.Score);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
