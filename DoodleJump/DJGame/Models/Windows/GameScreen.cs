@@ -29,23 +29,9 @@ namespace DJGame.Models.Windows
         public GameScreen()
         {
             int marginScore = 12;
-            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 10), 100, false, 0, false);
+            ply = new Player(new Vector2(Game1.ScreenDimensions.Center.X, Game1.ScreenDimensions.Center.Y), new Vector2(6, 12), 100, false, 0, false);
             paddles = new List<Paddle>();
             scoreTextEl = new DJText("", new Vector2(marginScore, marginScore), Vector2.Zero, 0, true);
-
-            // Ajout de paddle de base pour test
-            int y = Game1.ScreenDimensions.Height * 3 / 4;
-            for (int i = 0; i < (Game1.ScreenDimensions.Width / Paddle.NORME_SIZE) - 1; i++)
-            {
-                paddles.Add(new Paddle(PaddleType.SIMPLE, new Vector2(60 * i + 10, y)));
-            }
-
-            y = Game1.ScreenDimensions.Bottom + 100;
-            for (int i = 0; i < 10; i++)
-            {
-                y -= 100;
-                paddles.Add(new Paddle(PaddleType.SIMPLE, new Vector2(30, y)));
-            }
         }
 
         // Méthodes de la classe...
@@ -64,6 +50,7 @@ namespace DJGame.Models.Windows
 
         public override void Update(GameTime gameTime)
         {
+            // Joueur
             ply.Update(gameTime);
             Game1.Camera.Follow(ply);
 
@@ -82,34 +69,8 @@ namespace DJGame.Models.Windows
                     paddles.RemoveAt(i);
             }
 
-            // Générer des nouvelles plateformes - aidé par ChatGPT
-            int marginTop = 200;
-            while (highestPaddleY > Game1.Camera.Position.Y - marginTop)
-            {
-                // Espacement vertical aléatoire en fonction du score du joueur
-                int minSpacing = Math.Min(120, 60 + ply.Score / 100);
-                int maxSpacing = Math.Min(200, 100 + ply.Score / 50);
-                int verticalSpacing = Game1.random.Next(minSpacing, maxSpacing);
-                highestPaddleY -= verticalSpacing;
-
-                // Position horizontale aléatoire
-                float x = Game1.random.Next(0, Game1.ScreenDimensions.Width - paddles[0].Hitbox().Width);
-
-                // Vérifie qu’on ne chevauche pas une plateforme existante
-                Paddle newPaddle = new Paddle(PaddleType.SIMPLE, new Vector2(x, highestPaddleY));
-                newPaddle.LoadContent(Game1.PublicContent);
-                bool overlap = paddles.Any(p => p.Hitbox().Intersects(newPaddle.Hitbox()));
-
-                if (!overlap)
-                {
-                    paddles.Add(newPaddle);
-                }
-                else
-                {
-                    // si ça chevauche, on refait un tour → la boucle while va redonner une nouvelle chance
-                    // (on pourrait limiter le nombre d'essais si nécessaire)
-                }
-            }
+            // Nouvelles plateformes
+            PlatformsGeneration(gameTime);
 
             // Shoots
             foreach (Projectile s in ply.Shoots)
@@ -132,6 +93,64 @@ namespace DJGame.Models.Windows
             spriteBatch.Begin();
             spriteBatch.Draw(top, new Vector2(0, 0), new Rectangle(0, 0, 640, 92), Color.White);
             scoreTextEl.Draw(spriteBatch, gameTime);
+        }
+
+        /// <summary>
+        /// Méthode qui permet de générer les plateformes pour le DoodleJump
+        /// Générer avec ChatGPT
+        /// </summary>
+        private void PlatformsGeneration(GameTime gameTime)
+        {
+            const int marginTop = 300;
+
+            // Si aucune plateforme, on en crée une de départ
+            if (paddles.Count == 0)
+            {
+                float startY = Game1.Camera.Position.Y + Game1.ScreenDimensions.Height - 100;
+                Paddle startPlatform = new Paddle(PaddleType.SIMPLE, new Vector2(Game1.ScreenDimensions.Width / 2 - 50, startY));
+                startPlatform.LoadContent(Game1.PublicContent);
+                paddles.Add(startPlatform);
+            }
+
+            // Trouve la plateforme la plus haute (donc la plus petite valeur Y)
+            float currentHighestY = paddles.Min(p => p.Position.Y);
+
+            // Difficulté : dépend du score et du temps
+            float timeFactor = (float)(gameTime.TotalGameTime.TotalSeconds / 60f);
+            float difficulty = Math.Clamp((ply.Score / 2000f) + (timeFactor * 0.2f), 0f, 1f);
+
+            // Espacement moyen et variation
+            int baseSpacing = (int)MathHelper.Lerp(80, 200, difficulty);
+            int variation = (int)MathHelper.Lerp(20, 60, difficulty);
+            float removalChance = MathHelper.Lerp(0f, 0.3f, difficulty);
+
+            // Génération vers le haut jusqu’à la marge
+            while (currentHighestY > Game1.Camera.Position.Y - marginTop)
+            {
+                int verticalSpacing = baseSpacing + Game1.random.Next(-variation, variation);
+                float newY = currentHighestY - verticalSpacing;
+                float x = Game1.random.Next(0, Game1.ScreenDimensions.Width - 80);
+
+                var newPaddle = new Paddle(PaddleType.SIMPLE, new Vector2(x, newY));
+                newPaddle.LoadContent(Game1.PublicContent);
+
+                // Chance de rater une plateforme (pour créer des trous)
+                if (Game1.random.NextDouble() < removalChance)
+                    continue;
+
+                // Vérifie qu’on ne chevauche pas une autre
+                bool overlap = paddles.Any(p => p.Hitbox().Intersects(newPaddle.Hitbox()));
+                if (!overlap)
+                {
+                    paddles.Add(newPaddle);
+                    currentHighestY = newY; // on avance la génération naturellement
+                }
+                else
+                {
+                    // si ça chevauche, on essaie juste un peu plus haut
+                    currentHighestY -= 10;
+                }
+            }
         }
     }
 }

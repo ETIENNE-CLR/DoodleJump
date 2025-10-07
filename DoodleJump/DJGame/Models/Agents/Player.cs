@@ -84,10 +84,11 @@ namespace DJGame.Models.Agents
 
             // gravité
             velocity.Y += gravityEnv;
-            const int maxFallSpeed = 9;
+            const int maxFallSpeed = 15;
             velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
             position.Y += velocity.Y;
-            score += (int)Math.Min(velocity.Y, maxFallSpeed);
+            if (Position.Y > Game1.Camera.Position.Y)
+                score += (int)Math.Min(velocity.Y, maxFallSpeed);
 
             // Gestion des animations
             CurrentAnimationObject.Update(gameTime);

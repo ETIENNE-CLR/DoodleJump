@@ -22,7 +22,7 @@ namespace DJGame.Models.Game
         public Camera2D(int screenHeight)
         {
             upperLimit = screenHeight * 1 / 3;
-            lowerLimit = screenHeight * 2 / 3;
+            lowerLimit = screenHeight * 3 / 4;
         }
 
         public void Follow(Player player)

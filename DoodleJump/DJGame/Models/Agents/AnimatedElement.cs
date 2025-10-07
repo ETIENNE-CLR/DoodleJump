@@ -8,7 +8,6 @@ using DJGame.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1.Effects;
 
 namespace DJGame.Models.Agents
 {
