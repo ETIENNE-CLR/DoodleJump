@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Printing;
+using System.Security.Cryptography.X509Certificates;
 using DJGame.Enum;
 using DJGame.Interfaces;
 using DJGame.Models.Agents;
@@ -38,21 +40,25 @@ namespace DJGame.Models.Game
             switch (type)
             {
                 case PaddleType.SIMPLE:
-                    animations["idle"] = new Animation(Animation.GenerateAnimation(114, 29, 2, 3, 0, 0, 1), 0, 0, false);
+                    animations["idle"] = new Animation(new List<Rectangle>()
+                    {
+                        new Rectangle(2, 3, 144, 29)
+                    }, 0, 0, false);
                     break;
 
                 case PaddleType.BREAKABLE:
                     animations["idle"] = new Animation(new List<Rectangle>()
                     {
-                        new Rectangle(5, 146, 115, 29)
+                        new Rectangle(2, 146, 120, 30)
                     }, 0, 0, false);
 
                     animations["break"] = new Animation(new List<Rectangle>()
                     {
-                        new Rectangle(5, 185, 115, 35),
-                        new Rectangle(5, 235, 115, 50),
-                        new Rectangle(5, 300, 115, 60),
-                    }, 330, 0, false);
+                        new Rectangle(2, 182, 121, 41),
+                        new Rectangle(4, 232, 114, 55),
+                        new Rectangle(3, 298, 116, 66),
+                        new Rectangle(1210, 0, 116, 66),
+                    }, 30, 0, false);
                     break;
             }
             if (animations.Count == 0)
@@ -61,13 +67,28 @@ namespace DJGame.Models.Game
 
         public override void Update(GameTime gameTime)
         {
-            // Pas d'update pour des plateformes
-            throw new NotImplementedException();
+            switch (Type)
+            {
+                case PaddleType.BREAKABLE:
+                    if (animationName == "break") CurrentAnimationObject.Update(gameTime);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public void Scroll(float intensity)
         {
             position.Y += intensity;
+        }
+
+        public void Break()
+        {
+            if (type != PaddleType.BREAKABLE) throw new Exception("La plateforme n'est pas cassable !");
+
+            // Changement n'anim
+            animationName = "break";
         }
     }
 }

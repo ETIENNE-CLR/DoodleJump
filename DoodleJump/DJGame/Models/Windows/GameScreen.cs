@@ -70,15 +70,38 @@ namespace DJGame.Models.Windows
             for (int i = paddles.Count - 1; i >= 0; i--)
             {
                 Paddle p = paddles[i];
+                if (p.Type != PaddleType.SIMPLE) p.Update(gameTime);
                 highestPaddleY = paddles.Min(p => p.Position.Y);
 
-                // Collisions
+                // Il y a eu une collision
                 if (p.Hitbox().Intersects(ply.Hitbox()) && ply.Velocity.Y > 0)
-                    ply.Jump();
+                {
+                    // Quel type ?
+                    switch (p.Type)
+                    {
+                        case PaddleType.SIMPLE:
+                            ply.Jump();
+                            break;
+
+                        case PaddleType.BREAKABLE:
+                            p.Break();
+                            break;
+
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+
+                // Suppression des paddles cassés
+                if (p.CurrentAnimationObject.Finished)
+                    paddles.RemoveAt(i);
 
                 // Suppression des paddles en dessous de l'écran
                 if (p.Position.Y > Game1.Camera.Position.Y + Game1.ScreenDimensions.Height)
                     paddles.RemoveAt(i);
+
+                // Check Game Over
+                bool isGameOver = false;
             }
 
             // Nouvelles plateformes
@@ -139,7 +162,7 @@ namespace DJGame.Models.Windows
                 float newY = currentHighestY - verticalSpacing;
                 float x = Game1.random.Next(0, Game1.ScreenDimensions.Width - 80);
 
-                var newPaddle = new Paddle(PaddleType.SIMPLE, new Vector2(x, newY));
+                var newPaddle = new Paddle(GetRandomPaddleType(), new Vector2(x, newY));
                 newPaddle.LoadContent(Game1.PublicContent);
 
                 // Chance de rater une plateforme (pour créer des trous)
@@ -159,6 +182,12 @@ namespace DJGame.Models.Windows
                     currentHighestY -= 10;
                 }
             }
+        }
+
+        private PaddleType GetRandomPaddleType()
+        {
+            int nbRand = Game1.random.Next(0, 2);
+            return nbRand == 0 ? PaddleType.SIMPLE : PaddleType.BREAKABLE;
         }
     }
 }

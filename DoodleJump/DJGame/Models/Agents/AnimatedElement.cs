@@ -20,7 +20,7 @@ namespace DJGame.Models.Agents
 
         // Propriétés de la classe...
         protected Dictionary<string, Animation> Animations { get => animations; }
-        protected Animation CurrentAnimationObject { get => animations[animationName]; }
+        public Animation CurrentAnimationObject { get => animations[animationName]; }
         public bool IsMoving { get => isMoving; }
 
         // Constructeur la classe...

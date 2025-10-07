@@ -73,24 +73,28 @@ namespace DJGame.Models
             }
         }
 
-        public void Update(GameTime gametime)
+        public void Update(GameTime gameTime)
         {
-            timer += gametime.ElapsedGameTime.TotalMilliseconds;
+            if (frames.Count == 0)
+                return;
+
+            timer += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timer >= frameDuration)
             {
                 timer -= frameDuration;
                 currentFrameIndex++;
+
                 if (currentFrameIndex >= frames.Count)
-                    currentFrameIndex = isLooping ? 0 : frames.Count - 1;
-                if (!isLooping)
                 {
-                    finished = true;
-                    Restart();
+                    if (isLooping)
+                        currentFrameIndex = 0;
+                    else
+                    {
+                        // reste sur la dernière frame
+                        currentFrameIndex = frames.Count - 1;
+                        finished = true;
+                    }
                 }
-            }
-            else
-            {
-                finished = false;
             }
         }
 
@@ -98,6 +102,7 @@ namespace DJGame.Models
         {
             timer = 0;
             currentFrameIndex = 0;
+            finished = false;
         }
 
         /// <summary>
