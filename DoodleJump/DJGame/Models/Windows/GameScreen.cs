@@ -106,7 +106,10 @@ namespace DJGame.Models.Windows
                 // Check Game Over
                 bool gameOver = (player.Position.Y > Game1.Camera.lowerLimit + Game1.ScreenDimensions.Height);
                 if (gameOver)
+                {
+                    gameOverScreen.UpdatePlayerPosition(player.Position);
                     Game1.activeScene = gameOverScreen;
+                }
             }
 
             // Nouvelles plateformes

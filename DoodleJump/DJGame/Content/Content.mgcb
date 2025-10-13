@@ -104,11 +104,35 @@
 /processorParam:TextureFormat=Compressed
 /build:monogameText.spritefont
 
+#begin Sounds/break.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/break.wav
+
+#begin Sounds/fall.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/fall.mp3
+
 #begin Sounds/jump.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/jump.wav
+
+#begin Sounds/shoot_1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/shoot_1.mp3
+
+#begin Sounds/shoot_2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/shoot_2.mp3
 
 #begin Sprites/default.png
 /importer:TextureImporter

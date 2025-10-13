@@ -7,6 +7,7 @@ using DJGame.Enum;
 using DJGame.Interfaces;
 using DJGame.Models.Agents;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,6 +20,8 @@ namespace DJGame.Models.Game
         // Champs de la classe...
         public const int NORME_SIZE = 50;
         private PaddleType type;
+        private SoundEffect breakSoundEffect;
+        private SoundEffectInstance breakSoundEffectInstance;
 
         // Propriétés de la classe...
         public PaddleType Type { get => type; }
@@ -35,6 +38,8 @@ namespace DJGame.Models.Game
         {
             // Chargement de la texture
             texture = content.Load<Texture2D>("Sprites/default");
+            breakSoundEffect = content.Load<SoundEffect>("Sounds/break");
+            breakSoundEffectInstance = breakSoundEffect.CreateInstance();
 
             // Animations
             switch (type)
@@ -58,7 +63,7 @@ namespace DJGame.Models.Game
                         new Rectangle(4, 232, 114, 55),
                         new Rectangle(3, 298, 116, 66),
                         new Rectangle(1210, 0, 116, 66),
-                    }, 30, 0, false);
+                    }, 35, 0, false);
                     break;
             }
             if (animations.Count == 0)
@@ -89,6 +94,10 @@ namespace DJGame.Models.Game
 
             // Changement n'anim
             animationName = "break";
+            if (breakSoundEffectInstance.State != SoundState.Playing)
+            {
+                breakSoundEffectInstance.Play();
+            }
         }
     }
 }

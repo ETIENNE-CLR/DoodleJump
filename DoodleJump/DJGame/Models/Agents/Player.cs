@@ -23,6 +23,8 @@ namespace DJGame.Models.Agents
         private int score;
         private float highestY;
         private SoundEffect jumpSoundEffect;
+        private SoundEffect shootSoundEffect1;
+        private SoundEffect shootSoundEffect2;
 
         // Propriétés de la classe...
         public List<Projectile> Shoots { get => shoots; }
@@ -130,9 +132,14 @@ namespace DJGame.Models.Agents
 
         public void ShootOutScreen(int index)
         {
-            if (index < 0 || index > shoots.Count)
+            if (index < 0 || index > shoots.Count - 1)
                 throw new ArgumentOutOfRangeException("index");
             shoots.RemoveAt(index);
+        }
+
+        public void SetPosition(Vector2 newPosition)
+        {
+            position = newPosition;
         }
     }
 }
