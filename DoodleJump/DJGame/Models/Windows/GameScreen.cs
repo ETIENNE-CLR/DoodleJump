@@ -25,7 +25,7 @@ namespace DJGame.Models.Windows
         private Player player;
         private List<Paddle> paddles;
         private float highestPaddleY;
-        GameOverScreen gameOverScreen;
+        private GameOverScreen gameOverScreen;
 
         // Constructeur de la classe...
         public GameScreen()
