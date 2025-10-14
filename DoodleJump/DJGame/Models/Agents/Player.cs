@@ -75,7 +75,7 @@ namespace DJGame.Models.Agents
         {
             // gravité
             velocity.Y += gravityEnv;
-            const int maxFallSpeed = 15;
+            const int maxFallSpeed = 30;
             velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
             position.Y += velocity.Y;
 

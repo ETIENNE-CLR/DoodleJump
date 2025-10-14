@@ -10,6 +10,7 @@ using DJGame.Interfaces;
 using DJGame.Models.Agents;
 using DJGame.Models.Controls;
 using DJGame.Models.Game;
+using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -104,16 +105,21 @@ namespace DJGame.Models.Windows
                     paddles.RemoveAt(i);
 
                 // Check Game Over
-                bool gameOver = (player.Position.Y > Game1.Camera.lowerLimit + Game1.ScreenDimensions.Height);
-                if (gameOver)
+                if (IsGameOver())
                 {
                     gameOverScreen.UpdatePlayerPosition(player.Position);
                     Game1.activeScene = gameOverScreen;
                 }
             }
 
-            // Nouvelles plateformes
-            PlatformsGeneration(gameTime);
+            // Génération des nouvelles plateformes
+            float gap = Game1.ScreenDimensions.Height / paddles.Count;
+            float dernierePlateformeY = paddles.Max(p => p.Position.Y);
+            if (player.Position.Y < dernierePlateformeY + 200)
+            {
+                Paddle paddle = new Paddle(PaddleType.SIMPLE, new Vector2(Game1.random.Next(0, Game1.ScreenDimensions.Width), dernierePlateformeY - gap));
+                paddle.LoadContent(Game1.PublicContent);
+            }
 
             // Shoots
             for (int i = player.Shoots.Count - 1; i >= 0; i--)
@@ -150,52 +156,86 @@ namespace DJGame.Models.Windows
         private void PlatformsGeneration(GameTime gameTime)
         {
             const int marginTop = 300;
-    
-            // Trouve la plateforme la plus haute (donc la plus petite valeur Y)
+            const int maxAttemptsPerLayer = 5;
+
+            // plateforme la plus haute
             float currentHighestY = paddles.Min(p => p.Position.Y);
 
-            // Difficulté : dépend du score et du temps
-            float timeFactor = (float)(gameTime.TotalGameTime.TotalSeconds / 60f);
-            float difficulty = Math.Clamp((player.Score / 2000f) + (timeFactor * 0.2f), 0f, 1f);
+            // Temps total (en minutes)
+            float timeMinutes = (float)gameTime.TotalGameTime.TotalMinutes;
 
-            // Espacement moyen et variation
-            int baseSpacing = (int)MathHelper.Lerp(80, 200, difficulty);
-            int variation = (int)MathHelper.Lerp(20, 60, difficulty);
-            float removalChance = MathHelper.Lerp(0f, 0.3f, difficulty);
+            // --- difficulté de base très lente ---
+            float baseDifficulty = Math.Clamp((player.Score / 15000f) + (timeMinutes * 0.015f), 0f, 1f);
 
-            // Génération vers le haut jusqu’à la marge
+            // --- effet de vague ---
+            // crée un cycle de variation : la difficulté monte et descend lentement avec le score
+            // sin() varie entre -1 et +1 → on la remet entre 0 et 1
+            float wave = (float)((Math.Sin(player.Score / 3000f) + 1f) / 2f);
+
+            // combine les deux (base + vague)
+            float difficulty = Math.Clamp(baseDifficulty * 0.7f + wave * 0.3f, 0f, 1f);
+
+            // espacement entre plateformes (plus espacé = plus difficile)
+            int baseSpacing = (int)MathHelper.Lerp(100, 250, difficulty);
+            int variation = (int)MathHelper.Lerp(25, 80, difficulty);
+
+            // chance de trou
+            float removalChance = MathHelper.Lerp(0f, 0.20f, difficulty);
+
+            // chance d’ajouter une plateforme cassable à proximité
+            float breakableChance = MathHelper.Lerp(0.05f, 0.20f, difficulty);
+
             while (currentHighestY > Game1.Camera.Position.Y - marginTop)
             {
-                int verticalSpacing = baseSpacing + Game1.random.Next(-variation, variation);
-                float newY = currentHighestY - verticalSpacing;
-                float x = Game1.random.Next(0, Game1.ScreenDimensions.Width - 80);
+                bool placed = false;
+                int attempts = 0;
 
-                var newPaddle = new Paddle(GetRandomPaddleType(), new Vector2(x, newY));
-                newPaddle.LoadContent(Game1.PublicContent);
-
-                // Chance de rater une plateforme (pour créer des trous)
-                if (Game1.random.NextDouble() < removalChance)
-                    continue;
-
-                // Vérifie qu’on ne chevauche pas une autre
-                bool overlap = paddles.Any(p => p.Hitbox().Intersects(newPaddle.Hitbox()));
-                if (!overlap)
+                while (!placed && attempts < maxAttemptsPerLayer)
                 {
-                    paddles.Add(newPaddle);
-                    currentHighestY = newY; // on avance la génération naturellement
+                    attempts++;
+
+                    int verticalSpacing = baseSpacing + Game1.random.Next(-variation, variation);
+                    float newY = currentHighestY - verticalSpacing;
+                    float x = Game1.random.Next(0, Game1.ScreenDimensions.Width - 80);
+
+                    // sauter une chance de trou (pas de plateforme)
+                    if (Game1.random.NextDouble() < removalChance)
+                        continue;
+
+                    var paddle = new Paddle(PaddleType.SIMPLE, new Vector2(x, newY));
+                    paddle.LoadContent(Game1.PublicContent);
+
+                    bool overlap = paddles.Any(p => p.Hitbox().Intersects(paddle.Hitbox()));
+                    if (!overlap)
+                    {
+                        paddles.Add(paddle);
+                        currentHighestY = newY;
+                        placed = true;
+
+                        // bonus : plateforme cassable (ne remplace pas)
+                        if (Game1.random.NextDouble() < breakableChance)
+                        {
+                            float offsetX = Game1.random.Next(-100, 100);
+                            var breakable = new Paddle(
+                                PaddleType.BREAKABLE,
+                                new Vector2(Math.Clamp(x + offsetX, 0, Game1.ScreenDimensions.Width - 80),
+                                newY - Game1.random.Next(10, 30))
+                            );
+                            breakable.LoadContent(Game1.PublicContent);
+                            paddles.Add(breakable);
+                        }
+                    }
                 }
-                else
-                {
-                    // si ça chevauche, on essaie juste un peu plus haut
-                    currentHighestY -= 10;
-                }
+
+                if (!placed)
+                    currentHighestY -= baseSpacing;
             }
         }
 
-        private PaddleType GetRandomPaddleType()
+        public bool IsGameOver()
         {
-            int nbRand = Game1.random.Next(0, 2);
-            return nbRand == 0 ? PaddleType.SIMPLE : PaddleType.BREAKABLE;
+            float lowestPlatformY = paddles.Max(p => p.Position.Y);
+            return player.Position.Y > lowestPlatformY + Game1.ScreenDimensions.Height / 2;
         }
     }
 }
