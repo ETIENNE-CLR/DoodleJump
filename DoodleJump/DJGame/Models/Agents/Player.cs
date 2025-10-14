@@ -96,18 +96,27 @@ namespace DJGame.Models.Agents
 
         public void Move(KeyboardState kstate)
         {
-            if (kstate.IsKeyDown(Keys.Left) && Position.X > Game1.ScreenDimensions.X)
+            // déplacement horizontal
+            if (kstate.IsKeyDown(Keys.Left))
             {
                 position.X -= velocity.X;
                 flipped = true;
             }
 
-            if (kstate.IsKeyDown(Keys.Right) && (Position.X + Hitbox().Width) < Game1.ScreenDimensions.Width)
+            if (kstate.IsKeyDown(Keys.Right))
             {
                 position.X += velocity.X;
                 flipped = false;
             }
 
+            // wrap-around horizontal
+            if (position.X + Hitbox().Width < 0) // a quitté l’écran à gauche
+                position.X = Game1.ScreenDimensions.Width;
+
+            if (position.X > Game1.ScreenDimensions.Width) // a quitté l’écran à droite
+                position.X = -Hitbox().Width;
+
+            // tir
             if (kstate.IsKeyDown(Keys.Up))
             {
                 animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";

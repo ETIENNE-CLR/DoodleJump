@@ -10,7 +10,6 @@ using DJGame.Interfaces;
 using DJGame.Models.Agents;
 using DJGame.Models.Controls;
 using DJGame.Models.Game;
-using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -112,14 +111,8 @@ namespace DJGame.Models.Windows
                 }
             }
 
-            // Génération des nouvelles plateformes
-            float gap = Game1.ScreenDimensions.Height / paddles.Count;
-            float dernierePlateformeY = paddles.Max(p => p.Position.Y);
-            if (player.Position.Y < dernierePlateformeY + 200)
-            {
-                Paddle paddle = new Paddle(PaddleType.SIMPLE, new Vector2(Game1.random.Next(0, Game1.ScreenDimensions.Width), dernierePlateformeY - gap));
-                paddle.LoadContent(Game1.PublicContent);
-            }
+            // Nouvelles plateformes
+            PlatformsGeneration(gameTime);
 
             // Shoots
             for (int i = player.Shoots.Count - 1; i >= 0; i--)
