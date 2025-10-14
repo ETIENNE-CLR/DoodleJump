@@ -23,6 +23,7 @@ namespace DJGame.Models.Controls
         protected Rectangle clickedForm;
 
         // Constructeur de la classe...
+        public Button(Action toDo, Vector2 position):this(toDo, position, Vector2.Zero, 85, false, 0, false) { }
         public Button(Action toDo, Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(position, velocity, sizePourcent, flipped, rotation, showHitbox)
         {
             this.actionToDo = toDo;

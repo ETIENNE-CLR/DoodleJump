@@ -27,18 +27,17 @@ namespace DJGame.Models.Windows
         public TitleScreen()
         {
             int btnX = (Game1.ScreenDimensions.Width * 1 / 4) - 50;
-            int btnSize = 85;
             gameScreen = new GameScreen();
 
             // Bouton principaux
             btnPlay = new BtnPlay(new Action(() =>
             {
                 Game1.activeScene = gameScreen;
-            }), new Vector2(btnX, (Game1.ScreenDimensions.Height * 1 / 4) - 35), Vector2.Zero, btnSize, false, 0, false);
+            }), new Vector2(btnX, (Game1.ScreenDimensions.Height * 1 / 4) - 35));
             btnOptions = new BtnOptions(new Action(() =>
             {
                 // CODE
-            }), new Vector2(btnX, (Game1.ScreenDimensions.Center.Y * 3 / 5) + 10), Vector2.Zero, btnSize, false, 0, false);
+            }), new Vector2(btnX, (Game1.ScreenDimensions.Center.Y * 3 / 5) + 10));
             platform = new Paddle(PaddleType.SIMPLE, new Vector2((Game1.ScreenDimensions.Width * 1 / 4) - 60, Game1.ScreenDimensions.Height * 3 / 4), 55);
             player = new Player(new Vector2(platform.Position.X + 11, platform.Position.Y - 50), new Vector2(0, 10));
         }
@@ -62,7 +61,7 @@ namespace DJGame.Models.Windows
             // Main
             player.Update(gameTime);
             btnPlay.Update(gameTime);
-            btnOptions.Update(gameTime);
+            // btnOptions.Update(gameTime);
 
             // Collisions
             if (platform.Hitbox().Intersects(player.Hitbox()) && player.Velocity.Y > 0)
@@ -74,7 +73,7 @@ namespace DJGame.Models.Windows
             platform.Draw(spriteBatch, gameTime);
             player.Draw(spriteBatch, gameTime);
             btnPlay.Draw(spriteBatch, gameTime);
-            btnOptions.Draw(spriteBatch, gameTime);
+            // btnOptions.Draw(spriteBatch, gameTime);
         }
     }
 }

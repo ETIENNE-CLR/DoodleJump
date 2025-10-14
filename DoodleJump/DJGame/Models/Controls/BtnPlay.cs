@@ -11,7 +11,7 @@ namespace DJGame.Models.Controls
 {
     public class BtnPlay : Button
     {
-        public BtnPlay(Action toDo, Vector2 position, Vector2 velocity, int sizePourcent = 100, bool flipped = false, float rotation = 0, bool showHitbox = false) : base(toDo, position, velocity, sizePourcent, flipped, rotation, showHitbox)
+        public BtnPlay(Action toDo, Vector2 position) : base(toDo, position)
         {
         }
 

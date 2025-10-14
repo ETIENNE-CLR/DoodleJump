@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DJGame.Models.Controls
 {
-    public class BtnOptions : Button
+    internal class BtnMenu : Button
     {
-        public BtnOptions(Action toDo, Vector2 position) : base(toDo, position)
+        public BtnMenu(Action toDo, Vector2 position) : base(toDo, position)
         {
         }
 
@@ -19,8 +19,8 @@ namespace DJGame.Models.Controls
         {
             // Init
             texture = content.Load<Texture2D>("Controls/button");
-            normalForm = new Rectangle(0, 326, 223, 80);
-            clickedForm = new Rectangle(224, 246, 222, 80);
+            normalForm = new Rectangle(224, 82, 225, 82);
+            clickedForm = new Rectangle(224, 0, 225, 82);
         }
     }
 }

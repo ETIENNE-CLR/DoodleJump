@@ -106,8 +106,8 @@ namespace DJGame.Models.Windows
                 // Check Game Over
                 if (IsGameOver())
                 {
-                    gameOverScreen.UpdatePlayerPosition(player.Position);
                     Game1.activeScene = gameOverScreen;
+                    gameOverScreen.UpdatePlayerPosition(new Vector2(player.Position.X, player.Position.Y - Game1.Camera.Position.Y));
                 }
             }
 
