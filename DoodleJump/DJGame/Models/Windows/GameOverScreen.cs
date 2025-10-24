@@ -55,6 +55,9 @@ namespace DJGame.Models.Windows
             player.LoadContent(content);
             // ttlscreen.LoadContent(content);
             // gscreen.LoadContent(content);
+
+            btnPlay.LoadContent(content);
+            btnMenu.LoadContent(content);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

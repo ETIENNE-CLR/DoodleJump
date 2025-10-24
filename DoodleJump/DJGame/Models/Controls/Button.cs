@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DJGame.Interfaces;
 using DJGame.Models.Agents;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,6 +22,7 @@ namespace DJGame.Models.Controls
         protected bool clicked;
         protected Rectangle normalForm;
         protected Rectangle clickedForm;
+        private SoundEffect clickedSoundEffect;
 
         // Constructeur de la classe...
         public Button(Action toDo, Vector2 position):this(toDo, position, Vector2.Zero, 85, false, 0, false) { }
@@ -42,6 +44,10 @@ namespace DJGame.Models.Controls
             );
         }
 
+        public override void LoadContent(ContentManager content)
+        {
+            clickedSoundEffect = content.Load<SoundEffect>("Sounds/button");
+        }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
@@ -76,6 +82,7 @@ namespace DJGame.Models.Controls
                     clicked = true;
                 else if (mouseState.LeftButton == ButtonState.Released && clicked)
                 {
+                    clickedSoundEffect.Play();
                     actionToDo?.Invoke();
                     clicked = false;
                 }

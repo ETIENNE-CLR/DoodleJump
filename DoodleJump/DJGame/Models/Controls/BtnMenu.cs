@@ -18,6 +18,7 @@ namespace DJGame.Models.Controls
         public override void LoadContent(ContentManager content)
         {
             // Init
+            base.LoadContent(content);
             texture = content.Load<Texture2D>("Controls/button");
             normalForm = new Rectangle(224, 82, 225, 82);
             clickedForm = new Rectangle(224, 0, 225, 82);

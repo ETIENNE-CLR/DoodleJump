@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace DJGame.Models.Agents
 {
@@ -23,8 +24,10 @@ namespace DJGame.Models.Agents
         private int score;
         private float highestY;
         private SoundEffect jumpSoundEffect;
-        private SoundEffect shootSoundEffect1;
-        private SoundEffect shootSoundEffect2;
+        private Song shootSoundEffect1;
+        private Song shootSoundEffect2;
+        private bool shootSoundPlayed;
+        private float shootCooldown;
 
         // Propriétés de la classe...
         public List<Projectile> Shoots { get => shoots; }
@@ -42,6 +45,7 @@ namespace DJGame.Models.Agents
             score = 0;
             highestY = 0;
             jumpSoundEffect = null;
+            shootSoundPlayed = false;
         }
         // Méthodes de la classe...
         public override void LoadContent(ContentManager content)
@@ -49,6 +53,8 @@ namespace DJGame.Models.Agents
             // Init
             texture = content.Load<Texture2D>("Sprites/player");
             jumpSoundEffect = content.Load<SoundEffect>("Sounds/jump");
+            shootSoundEffect1 = content.Load<Song>("Sounds/shoot_1");
+            shootSoundEffect2 = content.Load<Song>("Sounds/shoot_2");
 
             // Animations
             float intervalAnim = 350;
@@ -78,6 +84,7 @@ namespace DJGame.Models.Agents
             const int maxFallSpeed = 30;
             velocity.Y = Math.Min(velocity.Y, maxFallSpeed);
             position.Y += velocity.Y;
+            shootCooldown += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Incrémentation du score
             if (position.Y < highestY)
@@ -118,10 +125,7 @@ namespace DJGame.Models.Agents
 
             // tir
             if (kstate.IsKeyDown(Keys.Up))
-            {
-                animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";
                 Shoot();
-            }
         }
 
         public void Jump()
@@ -133,10 +137,22 @@ namespace DJGame.Models.Agents
 
         private void Shoot()
         {
+            if (shootCooldown < 0.15f) return;
+            animationName = $"shoot{(animationName.Contains("jump") ? "_jump" : "")}";
+            if (!shootSoundPlayed)
+            {
+                if (Game1.random.Next(0, 2) == 0)
+                    MediaPlayer.Play(shootSoundEffect1);
+                else
+                    MediaPlayer.Play(shootSoundEffect2);
+                shootSoundPlayed = true;
+            }
             Vector2 positionNewProjectile = Position;
             Projectile newProj = new Projectile(positionNewProjectile);
             newProj.LoadContent(Game1.PublicContent);
             shoots.Add(newProj);
+            shootCooldown = 0;
+            shootSoundPlayed = false;
         }
 
         public void ShootOutScreen(int index)
