@@ -1,0 +1,121 @@
+% Prompt ChatGPT pour la création des block forest :
+
+% Tu es un assistant LaTeX.
+% Transforme le listing de répertoire ci-dessous en un **bloc LaTeX `forest`** prêt à coller, en utilisant UNIQUEMENT les styles/macros DÉJÀ définis dans mon préambule :
+
+% - Environnement : `\begin{forest} base layout,compact ... \end{forest}`
+% - Styles de nœud : `folder` (dossiers), `file` (fichiers)
+% - Macros : `\froot{...}`, `\fdir{...}`, `\ffile{...}`, `\fcode{...}`, `\fimage{...}`
+% (Elles gèrent les icônes ON/OFF et la marge `\iconpad`. **Ne les redéfinis pas**.)
+
+% RÈGLES DE CONVERSION
+% 1) **Entrée** : bloc brut (ex: sortie `tree`). Le premier niveau est la **racine**.
+% 2) **Type de nœud** :
+% - Dossier → style `folder` + macro `\fdir{...}` (ou `\froot{...}` pour la racine).
+% - Fichier → style `file` et macro selon l’extension :
+% * Code : `*.php, *.json, *.js, *.ts, *.css, *.html, *.md, *.xml, *.yml, *.yaml, *.ini` → `\fcode{...}`
+% * Image : `*.png, *.jpg, *.jpeg, *.gif, *.svg, *.webp` → `\fimage{...}`
+% * Sinon → `\ffile{...}`
+% 3) **Échapper** les caractères LaTeX spéciaux dans les libellés :
+% `_ -> \_`, `% -> \%`, `# -> \#`, `& -> \&`, `{ -> \{`, `} -> \}`, `~ -> \textasciitilde{}`, `^ -> \textasciicircum{}`, `\ -> \textbackslash{}`
+% 4) **Structure** : respecte l’imbrication. Un dossier devient `[ ... , folder  ... ]` contenant ses enfants.
+% 5) **Racine** : utiliser `[ \froot{<NomRacine>}, folder  ... ]`.
+% 6) (Optionnel) Trier : dossiers avant fichiers, ordre alphabétique.
+% 7) **Sortie attendue** : **uniquement** le bloc `forest`, sans texte additionnel.
+
+% EXEMPLE DE SORTIE ATTENDUE
+% \begin{forest} base layout,compact
+% 	[\froot{projet}, folder
+% 	[\fdir{public}, folder
+% 	[\fcode{index.php}, file]
+% 	[\ffile{.htaccess}, file]
+% 	]
+% 	[\fdir{src}, folder
+% 	[\fdir{Controllers}, folder]
+% 	[\fdir{Models}, folder]
+% 	[\fdir{Views}, folder]
+% 	[\fdir{Routes}, folder]
+% 	]
+% 	[\fcode{composer.json}, file]
+% 	]
+% \end{forest}
+
+% LISTING À CONVERTIR (ne modifie pas ces deux lignes) :
+% BEGIN LISTING
+% (colle ici la sortie `tree` ou autre)
+% END LISTING
+
+% --- packages ---
+\usepackage{forest}
+\usepackage{fontawesome5}      % icônes FA5
+
+% --- encadré esthétique (optionnel) ---
+% \newtcolorbox{treebox}{
+% 	colback=white, colframe=black!10, boxrule=0.4pt,
+% 	borderline west={2pt}{0pt}{blue!35},
+% 	arc=2mm, left=8pt, right=8pt, top=8pt, bottom=8pt
+% }
+
+% --- palette ---
+\definecolor{pill}{HTML}{EEF2FF}
+\definecolor{pillborder}{HTML}{C7D2FE}
+\definecolor{filepill}{HTML}{F3F4F6}
+\definecolor{fileborder}{HTML}{E5E7EB}
+\definecolor{ink}{HTML}{0F172A}
+
+% --- interrupteur + marge dépendante ---
+\newif\ificons
+\newdimen\iconpad
+% réglage global simple : \SetIcons{true} ou \SetIcons{false}
+\newcommand{\SetIcons}[1]{%
+	\csname icons#1\endcsname
+	\ificons \iconpad=1.1em\relax \else \iconpad=0.3em\relax \fi
+}
+% init : sans icônes
+\SetIcons{false}
+
+% --- base commune forest ---
+\forestset{
+	base layout/.style={
+		for tree={
+			font=\sffamily\small\color{ink},
+			grow'=0,
+			parent anchor=east, child anchor=west,
+			edge path'={(!u.parent anchor) -- +(7pt,0) |- (.child anchor)},
+			edge={draw=black!25, line width=.5pt},
+			l sep=10pt, s sep=8pt, anchor=west, calign=first,
+			text height=1.2ex, text depth=.2ex,
+			inner xsep=\iconpad,  % marge commune (dépend de \SetIcons)
+		},
+		pill/.style={draw, rounded corners=4pt, minimum height=1.4em},
+		folder/.style={pill, fill=pill,     draw=pillborder},
+		file/.style  ={pill, fill=filepill, draw=fileborder},
+	},
+	compact/.style={for tree/.append style={l sep=8pt, s sep=5pt}},
+}
+
+% --- icônes : fallback si rien n’est indiqué ---
+\newcommand{\DefaultIcon}{file} % icône par défaut
+
+% case d’icône : réserve la place ; affiche l’icône si \iconstrue
+\newcommand{\IconBox}[1]{%
+	\makebox[\iconpad][c]{\ificons \faIcon{#1}\fi}%
+}
+% version “peut-être vide” : si argument vide => DefaultIcon
+\newcommand{\IconBoxMaybe}[1]{%
+	\if\relax\detokenize{#1}\relax
+	\IconBox{\DefaultIcon}%
+	\else
+	\IconBox{#1}%
+	\fi
+}
+
+% --- macros de label (renommées) ---
+\newcommand{\froot}[1]{\IconBox{folder-open}#1}
+\newcommand{\fdir}[1]{\IconBox{folder}#1}
+\newcommand{\ffile}[1]{\IconBox{file}#1}
+\newcommand{\fcode}[1]{\IconBox{file-code}#1}
+\newcommand{\fimage}[1]{\IconBox{image}#1} % ou "file-image"
+
+% (optionnel) générique : \withicon[<nom-ou-vide>]{Texte}
+\newcommand{\withicon}[2][]{\IconBoxMaybe{#1}#2}

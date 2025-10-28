@@ -1,0 +1,191 @@
+\documentclass[french]{article}
+
+% Encodage et langue
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{fancyhdr, fancyvrb}
+\usepackage{forest}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{helvet}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\input{../inc_forest.tex}
+
+\renewcommand{\familydefault}{\sfdefault}
+\newcommand{\newLine}{\vspace{0.2cm}}
+
+
+% Style du code C#
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinelanguage{CSharp}{
+  morekeywords={abstract,event,new,struct,as,explicit,null,switch,
+  base,extern,object,this,bool,false,operator,throw,
+  break,finally,out,true,byte,fixed,override,try,
+  case,float,params,typeof,catch,for,private,uint,
+  char,foreach,protected,ulong,checked,goto,public,unchecked,
+  class,if,readonly,unsafe,const,implicit,ref,ushort,
+  continue,in,return,using,decimal,int,sbyte,virtual,
+  default,interface,sealed,volatile,delegate,internal,short,void,
+  do,is,sizeof,while,double,lock,stackalloc,
+  else,long,static,enum,namespace,string},
+  sensitive=true,
+  morecomment=[l]{//}, 
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+}
+\lstset{
+  language=CSharp,
+  backgroundcolor=\color{backcolour},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{codegray}\itshape,
+  stringstyle=\color{red},
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  tabsize=2
+}
+
+% En-tête et pied de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Documentation Technique}
+\fancyhead[R]{Projet C\#}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% Page de garde moderne
+\begin{titlepage}
+	\centering
+	% Ligne colorée décorative
+	\vspace*{2cm}
+	{\color{blue}\rule{\textwidth}{1.5pt}}\par
+	\vspace{1cm}
+
+	% Titre principal
+	{\Huge\bfseries Documentation Technique\par}
+	\vspace{0.5cm}
+	{\Large Projet C\# – Jeu *Doodle Jump*\par}
+
+	\vspace{1cm}
+	{\color{blue}\rule{0.6\textwidth}{1pt}}\par
+	\vspace{2cm}
+
+	% Infos auteur
+	{\Large \textbf{Auteur :} Etienne Caulier \par}
+	\vspace{0.5cm}
+	{\Large \textbf{Date :} \today \par}
+
+	\vfill
+
+	% Logo ou image optionnelle
+	% \includegraphics[width=0.35\textwidth]{logo.png}\par
+
+	\vspace{1cm}
+	{\large CFPT Informatique \par}
+
+	\vspace*{2cm}
+\end{titlepage}
+
+
+% Sommaire
+\tableofcontents
+\newpage
+
+% Contenu
+\section{Arborescence}
+\noindent
+\begin{minipage}[t]{0.49\textwidth}
+	{\SetIcons{true}
+		\begin{forest} base layout,compact
+			[\froot{DJGame}, folder
+				% [\fdir{Content}, folder
+				% 		[\fdir{Backgrounds}, folder
+				% 				[\fdir{Game}, folder]
+				% 				[\fdir{View}, folder]
+				% 		]
+				% 		[\fcode{Content.mgcb}, file]
+				% 		[\fdir{Controls}, folder
+				% 				[\fimage{button.png}, file]
+				% 				[\fimage{switch.png}, file]
+				% 		]
+				% 		[\fdir{Sounds}, folder
+				% 				[\ffile{break.wav}, file]
+				% 				[\ffile{button.wav}, file]
+				% 				[\ffile{fall.mp3}, file]
+				% 				[\ffile{jump.wav}, file]
+				% 				[\ffile{shoot\_1.mp3}, file]
+				% 				[\ffile{shoot\_2.mp3}, file]
+				% 		]
+				% 		[\fdir{Sprites}, folder
+				% 				[\fimage{default.png}, file]
+				% 				[\fimage{player.png}, file]
+				% 				[\fimage{projectile.png}, file]
+				% 		]
+				% 		[\fdir{Tops}, folder
+				% 				[\fimage{default.png}, file]
+				% 		]
+				% 		[\ffile{monogameText.spritefont}, file]
+				% ]
+				[\fdir{Enum}, folder
+						[\fcode{Direction.cs}, file]
+						[\fcode{PaddleType.cs}, file]
+				]
+				[\fdir{Interfaces}, folder
+						[\fcode{IMonogameElement.cs}, file]
+				]
+				[\fdir{Models}, folder
+						[\fdir{Agents}, folder
+								[\fcode{AnimatedElement.cs}, file]
+								[\fcode{Player.cs}, file]
+						]
+						[\fdir{Controls}, folder
+								[\fcode{BtnMenu.cs}, file]
+								[\fcode{BtnOptions.cs}, file]
+								[\fcode{BtnPlay.cs}, file]
+								[\fcode{Button.cs}, file]
+								[\fcode{DJNumberFont.cs}, file]
+						]
+						[\fdir{Game}, folder
+								[\fcode{Camera2D.cs}, file]
+								[\fcode{DataManager.cs}, file]
+								[\fcode{Paddle.cs}, file]
+								[\fcode{Projectile.cs}, file]
+						]
+						[\fdir{Windows}, folder
+								[\fcode{GameOverScreen.cs}, file]
+								[\fcode{GameScreen.cs}, file]
+								[\fcode{MonogameWindow.cs}, file]
+								[\fcode{TitleScreen.cs}, file]
+						]
+						[\fcode{Animation.cs}, file]
+						[\fcode{UiElement.cs}, file]
+				]
+				[\fcode{data.json}, file]
+				[\fcode{Game1.cs}, file]
+				[\ffile{Icon.ico}, file]
+			]
+		\end{forest}
+	}
+\end{minipage}
+\clearpage
+
+\section{Models}
+\lstinputlisting[language=CSharp, caption={code pour un element MonoGame}]{../../DoodleJump/DJGame/Models/UiElement.cs}
+\clearpage
+
+\subsection{Agents}
+\subsection{Controls}
+\subsection{Game}
+\subsection{Windows}
+
+\end{document}
